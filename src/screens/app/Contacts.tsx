@@ -5,10 +5,13 @@ import { Text, View } from 'react-native';
 
 const Contacts = () => {
     const contacts = useAppSelector((state) => state.contacts.data);
+    const userContacts = useAppSelector((state) => state.auth.user?.contacts);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(getContactsAction());
+        if (userContacts) {
+            dispatch(getContactsAction(userContacts));
+        }
     }, []);
     return (
         <View>

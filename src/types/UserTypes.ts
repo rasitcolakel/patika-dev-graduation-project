@@ -22,7 +22,7 @@ export type UserType =
           firstName: string;
           lastName: string;
           photoURL: string;
-          contacts?: Contacts[];
+          contacts?: string[];
       }
     | undefined;
 

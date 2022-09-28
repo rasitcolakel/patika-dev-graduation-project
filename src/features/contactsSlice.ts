@@ -7,10 +7,13 @@ const initialState: ContactsState = {
     loading: false,
 };
 
-export const getContactsAction = createAsyncThunk('auth/login', async () => {
-    const contacts = await UserService.getMyContacts();
-    return contacts;
-});
+export const getContactsAction = createAsyncThunk(
+    'contacts/getContacts',
+    async (userContacts: string[]) => {
+        const contacts = await UserService.getMyContacts(userContacts);
+        return contacts;
+    },
+);
 
 export const contactsSlice = createSlice({
     name: 'contacts',

@@ -115,24 +115,21 @@ export const userDocToUserType = (doc: any): UserType => {
     return userData;
 };
 
-export const getMyContacts = async (): Promise<Contacts> => {
-    const user = await getMyProfile();
-    if (user) {
-        const usersRef = collection(db, 'users');
-        const contactsQuery = query(usersRef, where('id', 'in', user.contacts));
-        const querySnapshot = await getDocs(contactsQuery);
-        const contacts: Contacts = [];
+export const getMyContacts = async (
+    userContacts: string[],
+): Promise<Contacts> => {
+    const usersRef = collection(db, 'users');
+    const contactsQuery = query(usersRef, where('id', 'in', userContacts));
+    const querySnapshot = await getDocs(contactsQuery);
+    const contacts: Contacts = [];
 
-        querySnapshot.forEach((doc) => {
-            const contact = userDocToUserType(doc.data());
-            if (contact?.contacts) {
-                delete contact.contacts;
-            }
-            contacts.push(contact);
-        });
-        console.log('contacts', contacts);
-        return contacts;
-    } else {
-        return [];
-    }
+    querySnapshot.forEach((doc) => {
+        const contact = userDocToUserType(doc.data());
+        if (contact?.contacts) {
+            delete contact.contacts;
+        }
+        contacts.push(contact);
+    });
+    console.log('contacts', contacts);
+    return contacts;
 };

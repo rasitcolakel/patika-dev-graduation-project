@@ -4,8 +4,21 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { LoginForm, RegisterForm, UserType } from 'src/types/UserTypes';
+import {
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    query,
+    setDoc,
+    where,
+} from 'firebase/firestore';
+import {
+    Contacts,
+    LoginForm,
+    RegisterForm,
+    UserType,
+} from 'src/types/UserTypes';
 
 import { auth, db } from './FirebaseService';
 
@@ -97,6 +110,29 @@ export const userDocToUserType = (doc: any): UserType => {
         firstName: doc.firstName,
         lastName: doc.lastName,
         photoURL: doc.photoURL,
+        contacts: doc.contacts || [],
     };
     return userData;
+};
+
+export const getMyContacts = async (): Promise<Contacts> => {
+    const user = await getMyProfile();
+    if (user) {
+        const usersRef = collection(db, 'users');
+        const contactsQuery = query(usersRef, where('id', 'in', user.contacts));
+        const querySnapshot = await getDocs(contactsQuery);
+        const contacts: Contacts = [];
+
+        querySnapshot.forEach((doc) => {
+            const contact = userDocToUserType(doc.data());
+            if (contact?.contacts) {
+                delete contact.contacts;
+            }
+            contacts.push(contact);
+        });
+        console.log('contacts', contacts);
+        return contacts;
+    } else {
+        return [];
+    }
 };

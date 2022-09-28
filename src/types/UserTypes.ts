@@ -22,5 +22,13 @@ export type UserType =
           firstName: string;
           lastName: string;
           photoURL: string;
+          contacts?: Contacts[];
       }
     | undefined;
+
+export type Contacts = UserType[];
+
+export type ContactsState = {
+    data: Contacts;
+    loading: boolean;
+};

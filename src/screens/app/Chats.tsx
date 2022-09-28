@@ -1,8 +1,11 @@
+import { logoutAction } from '@features/authSlice';
+import { useAppDispatch } from '@store/index';
 import { Button, Text, View, useColorMode } from 'native-base';
 import React from 'react';
 import Animated, { FadeInLeft, FadeOutRight } from 'react-native-reanimated';
 
 const Chats = () => {
+    const dispatch = useAppDispatch();
     const { toggleColorMode } = useColorMode();
     const [chats, setChats] = React.useState([
         {
@@ -53,6 +56,10 @@ const Chats = () => {
             </Button>
             <Button onPress={toggleColorMode} mt={2}>
                 Theme
+            </Button>
+
+            <Button onPress={() => dispatch(logoutAction())} mt={2}>
+                Log Out
             </Button>
         </View>
     );

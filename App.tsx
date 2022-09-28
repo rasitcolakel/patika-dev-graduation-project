@@ -1,7 +1,9 @@
 import Navigation from '@navigators/index';
+import store from '@store/index';
 import { NativeBaseProvider, extendTheme } from 'native-base';
 import React from 'react';
 import 'react-native-gesture-handler';
+import { Provider } from 'react-redux';
 
 // Define the config
 const config = {
@@ -27,13 +29,16 @@ export const theme = extendTheme({
     config,
 });
 type MyThemeType = typeof theme;
+
 declare module 'native-base' {
     interface ICustomTheme extends MyThemeType {}
 }
 export default function App() {
     return (
-        <NativeBaseProvider theme={theme}>
-            <Navigation />
-        </NativeBaseProvider>
+        <Provider store={store}>
+            <NativeBaseProvider theme={theme}>
+                <Navigation />
+            </NativeBaseProvider>
+        </Provider>
     );
 }

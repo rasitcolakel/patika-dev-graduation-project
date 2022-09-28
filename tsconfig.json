@@ -7,7 +7,9 @@
             "@navigators/*": ["./src/navigators/*"],
             "@screens/*": ["./src/screens/*"],
             "@features/*": ["./src/features/*"],
-            "@components/*": ["./src/components/*"]
+            "@components/*": ["./src/components/*"],
+            "@store/*": ["./src/store/*"],
+            "@services/*": ["./src/services/*"]
         }
     }
 }

@@ -1,14 +1,20 @@
+import { getMyProfileAction, logoutAction, setUser } from '@features/authSlice';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { auth } from '@services/FirebaseService';
+import { useAppDispatch, useAppSelector } from '@store/index';
+import * as SecureStore from 'expo-secure-store';
 import { StatusBar } from 'expo-status-bar';
 import { useColorModeValue, useTheme } from 'native-base';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { UserType } from 'src/types/UserTypes';
 
 import AppStack from './App';
 import AuthStack from './Auth';
 
 const Navigation = () => {
     const theme = useTheme();
-
+    const dispatch = useAppDispatch();
+    const user = useAppSelector((state) => state.auth.user);
     const MyTheme = {
         ...DefaultTheme,
         colors: {
@@ -24,12 +30,34 @@ const Navigation = () => {
             // notification: 'rgb(255, 69, 58)',
         },
     };
+
+    const initUser = async () => {
+        const localUser = await SecureStore.getItemAsync('user');
+        if (localUser) {
+            const user: UserType = JSON.parse(localUser);
+            dispatch(setUser(user));
+        }
+        console.log('localUser', localUser);
+        auth.onAuthStateChanged(async function (user) {
+            console.log('onAuthStateChanged', user);
+            if (user) {
+                // fetch current user from firebase
+                dispatch(getMyProfileAction());
+                console.log('user', user);
+            } else {
+                // if no user is logged in, clear storage and log out the user
+                dispatch(logoutAction());
+            }
+        });
+    };
+    useEffect(() => {
+        initUser();
+    }, []);
     return (
         <>
             <StatusBar style={useColorModeValue('dark', 'light')} />
             <NavigationContainer theme={MyTheme}>
-                {/* <AuthStack /> */}
-                <AppStack />
+                {user ? <AppStack /> : <AuthStack />}
             </NavigationContainer>
         </>
     );

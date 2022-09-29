@@ -32,3 +32,8 @@ export type ContactsState = {
     data: Contacts;
     loading: boolean;
 };
+
+export type SwipeableState = {
+    isOpen: boolean;
+    children: React.ReactNode | null;
+};

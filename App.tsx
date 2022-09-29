@@ -3,6 +3,7 @@ import store from '@store/index';
 import { NativeBaseProvider, extendTheme } from 'native-base';
 import React from 'react';
 import 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 
 // Define the config
@@ -36,9 +37,11 @@ declare module 'native-base' {
 export default function App() {
     return (
         <Provider store={store}>
-            <NativeBaseProvider theme={theme}>
-                <Navigation />
-            </NativeBaseProvider>
+            <SafeAreaProvider>
+                <NativeBaseProvider theme={theme}>
+                    <Navigation />
+                </NativeBaseProvider>
+            </SafeAreaProvider>
         </Provider>
     );
 }

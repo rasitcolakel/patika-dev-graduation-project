@@ -5,10 +5,16 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { db } from '@services/FirebaseService';
 import { useAppDispatch, useAppSelector } from '@store/index';
 import { MaterialIcons } from 'expo-vector-icons';
-import { collection, doc, getDocs, onSnapshot } from 'firebase/firestore';
-import { IconButton } from 'native-base';
+import { collection, onSnapshot } from 'firebase/firestore';
+import {
+    Actionsheet,
+    IconButton,
+    ScrollView,
+    Text,
+    useDisclose,
+} from 'native-base';
 import React, { useEffect, useLayoutEffect } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import {
     AppStackParamList,
     BottomTabsParamList,
@@ -24,7 +30,7 @@ const Contacts = ({ navigation }: Props) => {
     const userContacts = useAppSelector((state) => state.auth.user?.contacts);
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
-    console.log('user', user);
+    const { isOpen, onOpen, onClose } = useDisclose();
     useEffect(() => {
         if (userContacts) {
             dispatch(getContactsAction(userContacts));
@@ -63,14 +69,25 @@ const Contacts = ({ navigation }: Props) => {
                         as: MaterialIcons,
                         name: 'person-add',
                     }}
+                    onPress={onOpen}
                 />
             ),
         });
     }, []);
 
     return (
-        <View>
+        <View
+            style={{
+                backgroundColor: 'yellow',
+                flex: 1,
+            }}
+        >
             <Text>{contacts.length}</Text>
+            <Actionsheet isOpen={isOpen} onClose={onClose}>
+                <Actionsheet.Content>
+                    <ScrollView></ScrollView>
+                </Actionsheet.Content>
+            </Actionsheet>
         </View>
     );
 };

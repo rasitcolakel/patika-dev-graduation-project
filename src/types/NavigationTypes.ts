@@ -5,6 +5,11 @@ export type AuthStackParamList = {
 };
 
 export type AppStackParamList = {
+    BottomTabs: BottomTabsParamList;
+    ChatScreen: undefined;
+};
+
+export type BottomTabsParamList = {
     Chats: undefined;
     Contacts: undefined;
     Settings: undefined;

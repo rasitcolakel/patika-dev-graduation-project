@@ -1,68 +1,37 @@
-import { logoutAction } from '@features/authSlice';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import { useAppDispatch } from '@store/index';
-import { Button, Text, View, useColorMode } from 'native-base';
-import React from 'react';
-import Animated, { FadeInLeft, FadeOutRight } from 'react-native-reanimated';
+import { MaterialIcons } from 'expo-vector-icons';
+import { IconButton, View, useColorMode } from 'native-base';
+import React, { useLayoutEffect } from 'react';
+import {
+    AppStackParamList,
+    BottomTabsParamList,
+} from 'src/types/NavigationTypes';
 
-const Chats = () => {
+type Props = CompositeScreenProps<
+    BottomTabScreenProps<BottomTabsParamList, 'Chats'>,
+    StackScreenProps<AppStackParamList>
+>;
+const Chats = ({ navigation }: Props) => {
     const dispatch = useAppDispatch();
     const { toggleColorMode } = useColorMode();
-    const [chats, setChats] = React.useState([
-        {
-            id: 1.13123,
-            value: 1,
-        },
-        {
-            id: 2.13123,
-            value: 2,
-        },
-        {
-            id: 3.13123,
-            value: 3,
-        },
-        // add 10 items
-        {
-            id: 4.13123,
-            value: 4,
-        },
-    ]);
 
-    const addChat = () => {
-        setChats([...chats, { id: chats.length, value: Math.random() * 100 }]);
-    };
-    const removeChat = () => {
-        setChats(chats.slice(0, -1));
-    };
-    return (
-        <View>
-            <Text>Chats</Text>
-            {chats.map((chat) => (
-                <Animated.View
-                    key={chat.id}
-                    entering={FadeInLeft}
-                    exiting={FadeOutRight}
-                >
-                    <View bg="blue.300">
-                        <Text>{chat.value}</Text>
-                    </View>
-                </Animated.View>
-            ))}
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <IconButton
+                    _icon={{
+                        as: MaterialIcons,
+                        name: 'add',
+                    }}
+                />
+            ),
+        });
+    }, []);
 
-            <Button onPress={addChat} mt={10}>
-                Add Chat
-            </Button>
-            <Button onPress={removeChat} mt={2}>
-                Remove Chat
-            </Button>
-            <Button onPress={toggleColorMode} mt={2}>
-                Theme
-            </Button>
-
-            <Button onPress={() => dispatch(logoutAction())} mt={2}>
-                Log Out
-            </Button>
-        </View>
-    );
+    return <View></View>;
 };
 
 export default Chats;

@@ -1,3 +1,4 @@
+import CustomToast from '@components/CustomToast';
 import { getMyProfileAction, logoutAction, setUser } from '@features/authSlice';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { auth } from '@services/FirebaseService';
@@ -55,6 +56,7 @@ const Navigation = () => {
     }, []);
     return (
         <>
+            <CustomToast />
             <StatusBar style={useColorModeValue('dark', 'light')} />
             <NavigationContainer theme={MyTheme}>
                 {user ? <AppStack /> : <AuthStack />}

@@ -1,5 +1,6 @@
 import { authSlice } from '@features/authSlice';
 import { contactsSlice } from '@features/contactsSlice';
+import { uiSlice } from '@features/uiSlice';
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
@@ -7,6 +8,7 @@ const store = configureStore({
     reducer: {
         auth: authSlice.reducer,
         contacts: contactsSlice.reducer,
+        ui: uiSlice.reducer,
     },
     // devtools is enabled by default in development mode
     devTools: true,

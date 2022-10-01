@@ -1,9 +1,10 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Chats from '@screens/app/Chats';
-import Contacts from '@screens/app/Contacts';
 import Settings from '@screens/app/Settings';
 import { MaterialIcons } from 'expo-vector-icons';
 import { BottomTabsParamList } from 'src/types/NavigationTypes';
+
+import ContactsStack from './ContactsStack';
 
 const Tab = createBottomTabNavigator<BottomTabsParamList>();
 
@@ -11,8 +12,8 @@ const BottomTabs = () => {
     return (
         <Tab.Navigator initialRouteName="Chats">
             <Tab.Screen
-                name="Contacts"
-                component={Contacts}
+                name="ContactsStack"
+                component={ContactsStack}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <MaterialIcons
@@ -21,6 +22,8 @@ const BottomTabs = () => {
                             size={size}
                         />
                     ),
+                    headerShown: false,
+                    title: 'Contacts',
                 }}
             />
             <Tab.Screen

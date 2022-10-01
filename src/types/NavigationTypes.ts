@@ -11,6 +11,11 @@ export type AppStackParamList = {
 
 export type BottomTabsParamList = {
     Chats: undefined;
-    Contacts: undefined;
+    ContactsStack: ContactsStackParamList;
     Settings: undefined;
+};
+
+export type ContactsStackParamList = {
+    Contacts: undefined;
+    AddContact: undefined;
 };

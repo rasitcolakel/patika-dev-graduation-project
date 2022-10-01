@@ -1,9 +1,8 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { useAppDispatch } from '@store/index';
 import { MaterialIcons } from 'expo-vector-icons';
-import { IconButton, View, useColorMode } from 'native-base';
+import { IconButton, View } from 'native-base';
 import React, { useLayoutEffect } from 'react';
 import {
     AppStackParamList,
@@ -15,9 +14,6 @@ type Props = CompositeScreenProps<
     StackScreenProps<AppStackParamList>
 >;
 const Chats = ({ navigation }: Props) => {
-    const dispatch = useAppDispatch();
-    const { toggleColorMode } = useColorMode();
-
     useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
@@ -31,7 +27,7 @@ const Chats = ({ navigation }: Props) => {
         });
     }, []);
 
-    return <View></View>;
+    return <View />;
 };
 
 export default Chats;

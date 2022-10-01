@@ -1,6 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import ChatScreen from '@screens/app/ChatScreen';
-import Contacts from '@screens/app/Contacts';
 import { AppStackParamList } from 'src/types/NavigationTypes';
 
 import BottomTabs from './BottomTabs';

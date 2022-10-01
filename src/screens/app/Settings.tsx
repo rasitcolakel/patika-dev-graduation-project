@@ -1,10 +1,14 @@
+import { useAppSelector } from '@store/index';
+import { Button, Text, View, useColorMode } from 'native-base';
 import React from 'react';
-import { Text, View } from 'react-native';
 
 const Settings = () => {
+    const user = useAppSelector((state) => state.auth.user);
+    const { toggleColorMode } = useColorMode();
     return (
         <View>
-            <Text>Settings</Text>
+            <Text>{user?.firstName + ' ' + user?.lastName}</Text>
+            <Button onPress={toggleColorMode}>Change Theme</Button>
         </View>
     );
 };

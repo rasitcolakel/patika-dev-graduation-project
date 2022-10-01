@@ -12,25 +12,34 @@ export type RegisterForm = {
 };
 
 export type AuthState = {
-    user: null | UserType;
+    user: undefined | UserType;
 };
 
-export type UserType =
-    | {
-          id: string;
-          email: string;
-          firstName: string;
-          lastName: string;
-          photoURL: string;
-          contacts?: string[];
-      }
-    | undefined;
+export type UserType = {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    photoURL: string;
+    contacts?: string[];
+};
 
 export type Contacts = UserType[];
+
+export type FilteredContact = UserType & {
+    isContact: boolean;
+    loading: boolean;
+};
 
 export type ContactsState = {
     data: Contacts;
     loading: boolean;
+    addContact: {
+        loading: boolean;
+        data: Contacts;
+        filter: string;
+        filteredData: FilteredContact[];
+    };
 };
 
 export type SwipeableState = {

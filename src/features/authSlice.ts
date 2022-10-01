@@ -74,7 +74,7 @@ export const authSlice = createSlice({
                 // registerAction.fulfilled,
                 getMyProfileAction.fulfilled,
             ),
-            (state, action: PayloadAction<UserType>) => {
+            (state, action: PayloadAction<UserType | undefined>) => {
                 state.user = action.payload;
             },
         );

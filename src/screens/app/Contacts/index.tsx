@@ -1,3 +1,4 @@
+import ContactsList from '@components/ContactsList';
 import { getContactsAction } from '@features/contactsSlice';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps } from '@react-navigation/native';
@@ -6,37 +7,21 @@ import { db } from '@services/FirebaseService';
 import { useAppDispatch, useAppSelector } from '@store/index';
 import { MaterialIcons } from 'expo-vector-icons';
 import { collection, onSnapshot } from 'firebase/firestore';
-import {
-    Actionsheet,
-    IconButton,
-    ScrollView,
-    Text,
-    useDisclose,
-} from 'native-base';
+import { IconButton, View } from 'native-base';
 import React, { useEffect, useLayoutEffect } from 'react';
-import { View } from 'react-native';
 import {
-    AppStackParamList,
     BottomTabsParamList,
+    ContactsStackParamList,
 } from 'src/types/NavigationTypes';
 
 type Props = CompositeScreenProps<
-    BottomTabScreenProps<BottomTabsParamList, 'Contacts'>,
-    StackScreenProps<AppStackParamList>
+    StackScreenProps<ContactsStackParamList, 'Contacts'>,
+    BottomTabScreenProps<BottomTabsParamList, 'ContactsStack'>
 >;
 
 const Contacts = ({ navigation }: Props) => {
-    const contacts = useAppSelector((state) => state.contacts.data);
-    const userContacts = useAppSelector((state) => state.auth.user?.contacts);
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
-    const { isOpen, onOpen, onClose } = useDisclose();
-    useEffect(() => {
-        if (userContacts) {
-            dispatch(getContactsAction(userContacts));
-        }
-    }, []);
-
     // onsnapshot
     useEffect(() => {
         if (user?.id) {
@@ -47,13 +32,9 @@ const Contacts = ({ navigation }: Props) => {
                     // snapshot.docChanges().forEach((change) => {
                     //     console.log('change', change.doc.id);
                     // });
-
-                    const data = snapshot.docs.map((doc) => ({
-                        id: doc.id,
-                        ...doc.data(),
-                    }));
+                    const data = snapshot.docs.map((doc) => doc.id);
                     console.log('data', data);
-                    //dispatch(getContactsAction(data));
+                    dispatch(getContactsAction(data));
                 },
             );
 
@@ -69,25 +50,16 @@ const Contacts = ({ navigation }: Props) => {
                         as: MaterialIcons,
                         name: 'person-add',
                     }}
-                    onPress={onOpen}
+                    mr={2}
+                    onPress={() => navigation.push('AddContact')}
                 />
             ),
         });
     }, []);
 
     return (
-        <View
-            style={{
-                backgroundColor: 'yellow',
-                flex: 1,
-            }}
-        >
-            <Text>{contacts.length}</Text>
-            <Actionsheet isOpen={isOpen} onClose={onClose}>
-                <Actionsheet.Content>
-                    <ScrollView></ScrollView>
-                </Actionsheet.Content>
-            </Actionsheet>
+        <View flex={1}>
+            <ContactsList />
         </View>
     );
 };

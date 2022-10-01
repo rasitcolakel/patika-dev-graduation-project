@@ -22,6 +22,16 @@ import {
 
 import { auth, db } from './FirebaseService';
 
+enum authErrors {
+    'auth/email-already-in-use' = 'Email already in use',
+    'auth/invalid-email' = 'Invalid email',
+    'auth/operation-not-allowed' = 'Operation not allowed',
+    'auth/weak-password' = 'Weak password',
+    'auth/user-disabled' = 'User disabled',
+    'auth/user-not-found' = 'User not found',
+    'auth/wrong-password' = 'Wrong password',
+}
+
 export const login = async ({
     email,
     password,
@@ -36,27 +46,34 @@ export const login = async ({
         console.log('user has been logged in');
         console.log(response);
         return response;
-    } catch (error) {
-        console.log('user could not be logged in', error);
-        throw error;
+    } catch (error: any) {
+        const code = error.code as keyof typeof authErrors;
+        const message = authErrors[code] || error.message;
+        throw new Error(message);
     }
 };
 
 export const register = async (
     values: RegisterForm,
 ): Promise<UserCredential> => {
-    console.log('user is being registered');
-    const response = await createUserWithEmailAndPassword(
-        auth,
-        values.email,
-        values.password,
-    );
-    console.log('user is registered');
+    try {
+        console.log('user is being registered');
+        const response = await createUserWithEmailAndPassword(
+            auth,
+            values.email,
+            values.password,
+        );
+        console.log('user is registered');
 
-    console.log('user will be saved to firestore');
-    await saveUserToFirestore(response, values);
-    console.log('user saved to firestore');
-    return response;
+        console.log('user will be saved to firestore');
+        await saveUserToFirestore(response, values);
+        console.log('user saved to firestore');
+        return response;
+    } catch (error: any) {
+        const code = error.code as keyof typeof authErrors;
+        const message = authErrors[code] || error.message;
+        throw new Error(message);
+    }
 };
 
 export const logout = async () => {
@@ -84,7 +101,7 @@ export async function saveUserToFirestore(
     }
 }
 
-export async function getMyProfile(): Promise<UserType> {
+export async function getMyProfile(): Promise<UserType | undefined> {
     try {
         console.log('getting my profile');
         const user = auth.currentUser;
@@ -104,32 +121,70 @@ export async function getMyProfile(): Promise<UserType> {
 }
 
 export const userDocToUserType = (doc: any): UserType => {
+    console.log('converting user doc to user type', doc);
     const userData: UserType = {
         id: doc.id,
         email: doc.email,
         firstName: doc.firstName,
         lastName: doc.lastName,
         photoURL: doc.photoURL,
-        contacts: doc.contacts || [],
     };
     return userData;
 };
 
 export const getMyContacts = async (
     userContacts: string[],
-): Promise<Contacts> => {
-    const usersRef = collection(db, 'users');
-    const contactsQuery = query(usersRef, where('id', 'in', userContacts));
-    const querySnapshot = await getDocs(contactsQuery);
-    const contacts: Contacts = [];
+): Promise<Contacts | undefined> => {
+    try {
+        if (userContacts.length > 0) {
+            const usersRef = collection(db, 'users');
+            const contactsQuery = query(
+                usersRef,
+                where('id', 'in', userContacts),
+            );
+            const querySnapshot = await getDocs(contactsQuery);
+            const contacts: Contacts = [];
 
-    querySnapshot.forEach((doc) => {
-        const contact = userDocToUserType(doc.data());
-        if (contact?.contacts) {
-            delete contact.contacts;
+            querySnapshot.forEach((doc) => {
+                const contact = userDocToUserType(doc.data());
+                if (contact?.contacts) {
+                    delete contact.contacts;
+                }
+                contacts.push(contact);
+            });
+            console.log('contacts', contacts);
+            return contacts;
+        } else {
+            return [];
         }
-        contacts.push(contact);
-    });
-    console.log('contacts', contacts);
-    return contacts;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const getAllUsers = async (
+    userContacts?: string[],
+): Promise<UserType[] | undefined> => {
+    try {
+        const usersRef = collection(db, 'users');
+
+        const querySnapshot = await getDocs(
+            userContacts && userContacts?.length > 0
+                ? query(usersRef, where('id', 'not-in', userContacts))
+                : usersRef,
+        );
+        const users: UserType[] = [];
+
+        querySnapshot.forEach((doc) => {
+            const contact = userDocToUserType(doc.data());
+            if (contact?.contacts) {
+                delete contact.contacts;
+            }
+            users.push(contact);
+        });
+        console.log('users', users);
+        return users;
+    } catch (error) {
+        console.log(error);
+    }
 };

@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice, isAnyOf } from '@reduxjs/toolkit';
 import * as ContactsService from '@services/ContactsService';
 import * as UserService from '@services/UserService';
+import { ContactsState, UserType } from '@src/types/UserTypes';
 import { RootState } from '@store/index';
+import { DocumentChange, DocumentData } from 'firebase/firestore';
 import _ from 'lodash';
-import { ContactsState } from 'src/types/UserTypes';
 
 const initialState: ContactsState = {
     data: [],
@@ -53,6 +54,29 @@ export const removeContactAction = createAsyncThunk(
     },
 );
 
+export const handleContactChangeAction = createAsyncThunk(
+    'contacts/handleContactChange',
+    async (change: DocumentChange<DocumentData>, { getState, dispatch }) => {
+        console.log('change', change.type, change.doc.data());
+        const state = getState() as RootState;
+        if (change.type === 'added') {
+            const checkIsAdded = _.find(
+                state.contacts.data,
+                (contact) => contact.id === change.doc.id,
+            );
+            if (!checkIsAdded) {
+                const user = await UserService.getUserById(change.doc.id);
+                console.log('user getUserById', user);
+                if (user) {
+                    dispatch(addContact(user));
+                }
+            }
+        } else if (change.type === 'removed') {
+            dispatch(removeContact(change.doc.id));
+        }
+    },
+);
+
 export const contactsSlice = createSlice({
     name: 'contacts',
     initialState,
@@ -78,6 +102,14 @@ export const contactsSlice = createSlice({
                         .includes(action.payload.toLocaleLowerCase())
                 );
             });
+        },
+        addContact: (state, action) => {
+            state.data.push(action.payload);
+        },
+        removeContact: (state, action) => {
+            state.data = state.data.filter(
+                (contact) => contact.id !== action.payload,
+            );
         },
     },
     extraReducers: (builder) => {
@@ -151,6 +183,7 @@ export const contactsSlice = createSlice({
     },
 });
 
-export const { filterContacts } = contactsSlice.actions;
+export const { filterContacts, addContact, removeContact } =
+    contactsSlice.actions;
 
 export default contactsSlice.reducer;

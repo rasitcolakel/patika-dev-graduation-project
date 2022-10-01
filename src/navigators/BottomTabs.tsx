@@ -1,8 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Chats from '@screens/app/Chats';
 import Settings from '@screens/app/Settings';
+import { BottomTabsParamList } from '@src/types/NavigationTypes';
 import { MaterialIcons } from 'expo-vector-icons';
-import { BottomTabsParamList } from 'src/types/NavigationTypes';
 
 import ContactsStack from './ContactsStack';
 

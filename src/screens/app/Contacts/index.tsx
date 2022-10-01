@@ -1,27 +1,31 @@
 import ContactsList from '@components/ContactsList';
-import { getContactsAction } from '@features/contactsSlice';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { db } from '@services/FirebaseService';
+import { handleContactChangeAction } from '@src/features/contactsSlice';
+import {
+    AppStackParamList,
+    ContactsStackParamList,
+} from '@src/types/NavigationTypes';
+import { UserType } from '@src/types/UserTypes';
 import { useAppDispatch, useAppSelector } from '@store/index';
 import { MaterialIcons } from 'expo-vector-icons';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { IconButton, View } from 'native-base';
 import React, { useEffect, useLayoutEffect } from 'react';
-import {
-    BottomTabsParamList,
-    ContactsStackParamList,
-} from 'src/types/NavigationTypes';
 
 type Props = CompositeScreenProps<
     StackScreenProps<ContactsStackParamList, 'Contacts'>,
-    BottomTabScreenProps<BottomTabsParamList, 'ContactsStack'>
+    StackScreenProps<AppStackParamList, 'BottomTabs'>
 >;
 
 const Contacts = ({ navigation }: Props) => {
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
+    const goToChat = (user: UserType) => {
+        navigation.push('ChatScreen', { user });
+    };
+
     // onsnapshot
     useEffect(() => {
         if (user?.id) {
@@ -29,12 +33,9 @@ const Contacts = ({ navigation }: Props) => {
             const unsubscribe = onSnapshot(
                 collection(db, 'users', user.id, 'contacts'),
                 (snapshot) => {
-                    // snapshot.docChanges().forEach((change) => {
-                    //     console.log('change', change.doc.id);
-                    // });
-                    const data = snapshot.docs.map((doc) => doc.id);
-                    console.log('data', data);
-                    dispatch(getContactsAction(data));
+                    snapshot.docChanges().forEach((change) => {
+                        dispatch(handleContactChangeAction(change));
+                    });
                 },
             );
 
@@ -59,7 +60,7 @@ const Contacts = ({ navigation }: Props) => {
 
     return (
         <View flex={1}>
-            <ContactsList />
+            <ContactsList goToChat={goToChat} />
         </View>
     );
 };

@@ -9,7 +9,6 @@ export const saveContactToFirebase = async (id: string) => {
         if (user) {
             const contactToAdd = {
                 id,
-                createdAt: new Date(),
             };
             const contactsRef = collection(db, 'users', user.uid, 'contacts');
             await setDoc(doc(contactsRef, id), contactToAdd);

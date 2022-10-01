@@ -1,3 +1,5 @@
+import { UserType } from './UserTypes';
+
 export type AuthStackParamList = {
     Login: undefined;
     Register: undefined;
@@ -6,7 +8,7 @@ export type AuthStackParamList = {
 
 export type AppStackParamList = {
     BottomTabs: BottomTabsParamList;
-    ChatScreen: undefined;
+    ChatScreen: { user: UserType };
 };
 
 export type BottomTabsParamList = {

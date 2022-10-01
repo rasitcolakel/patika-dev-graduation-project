@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import ChatScreen from '@screens/app/ChatScreen';
-import { AppStackParamList } from 'src/types/NavigationTypes';
+import { AppStackParamList } from '@src/types/NavigationTypes';
 
 import BottomTabs from './BottomTabs';
 
@@ -14,6 +14,7 @@ const AppStack = () => {
                 component={BottomTabs}
                 options={{
                     headerShown: false,
+                    title: '',
                 }}
             />
             <Tab.Screen name="ChatScreen" component={ChatScreen} />

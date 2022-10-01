@@ -1,5 +1,11 @@
 // Import the functions you need from the SDKs you need
 import {
+    Contacts,
+    LoginForm,
+    RegisterForm,
+    UserType,
+} from '@src/types/UserTypes';
+import {
     UserCredential,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
@@ -13,12 +19,6 @@ import {
     setDoc,
     where,
 } from 'firebase/firestore';
-import {
-    Contacts,
-    LoginForm,
-    RegisterForm,
-    UserType,
-} from 'src/types/UserTypes';
 
 import { auth, db } from './FirebaseService';
 
@@ -116,7 +116,7 @@ export async function getMyProfile(): Promise<UserType | undefined> {
             }
         }
     } catch (error) {
-        console.log(error);
+        console.log('error getMyProfile', error);
     }
 }
 
@@ -136,16 +136,24 @@ export const getMyContacts = async (
     userContacts: string[],
 ): Promise<Contacts | undefined> => {
     try {
-        if (userContacts.length > 0) {
-            const usersRef = collection(db, 'users');
-            const contactsQuery = query(
-                usersRef,
+        const user = auth.currentUser;
+        if (user) {
+            const contactsQuery = collection(db, 'users', user.uid, 'contacts');
+
+            const querySnapshot = await getDocs(contactsQuery);
+            const userContacts: string[] = [];
+            querySnapshot.forEach((doc) => {
+                userContacts.push(doc.id);
+            });
+            console.log('userContacts', userContacts);
+
+            const usersQuery = query(
+                collection(db, 'users'),
                 where('id', 'in', userContacts),
             );
-            const querySnapshot = await getDocs(contactsQuery);
+            const usersQuerySnapshot = await getDocs(usersQuery);
             const contacts: Contacts = [];
-
-            querySnapshot.forEach((doc) => {
+            usersQuerySnapshot.forEach((doc) => {
                 const contact = userDocToUserType(doc.data());
                 if (contact?.contacts) {
                     delete contact.contacts;
@@ -154,8 +162,6 @@ export const getMyContacts = async (
             });
             console.log('contacts', contacts);
             return contacts;
-        } else {
-            return [];
         }
     } catch (error) {
         console.log(error);
@@ -166,25 +172,51 @@ export const getAllUsers = async (
     userContacts?: string[],
 ): Promise<UserType[] | undefined> => {
     try {
-        const usersRef = collection(db, 'users');
+        const user = auth.currentUser;
+        if (user) {
+            const usersRef = collection(db, 'users');
 
-        const querySnapshot = await getDocs(
-            userContacts && userContacts?.length > 0
-                ? query(usersRef, where('id', 'not-in', userContacts))
-                : usersRef,
-        );
-        const users: UserType[] = [];
+            const querySnapshot = await getDocs(
+                userContacts && userContacts?.length > 0
+                    ? query(
+                          usersRef,
+                          where('id', 'not-in', [user.uid, ...userContacts]),
+                      )
+                    : usersRef,
+            );
+            const users: UserType[] = [];
 
-        querySnapshot.forEach((doc) => {
-            const contact = userDocToUserType(doc.data());
-            if (contact?.contacts) {
-                delete contact.contacts;
-            }
-            users.push(contact);
-        });
-        console.log('users', users);
-        return users;
+            querySnapshot.forEach((doc) => {
+                const contact = userDocToUserType(doc.data());
+                if (contact?.contacts) {
+                    delete contact.contacts;
+                }
+                users.push(contact);
+            });
+            console.log('users', users);
+            return users;
+        }
     } catch (error) {
         console.log(error);
+    }
+};
+
+export const getUserById = async (
+    id: string,
+): Promise<UserType | undefined> => {
+    try {
+        const userDoc = doc(db, 'users', id);
+        const docSnap = await getDoc(userDoc);
+        if (docSnap.exists()) {
+            console.log('found user by id');
+            const docData = docSnap.data();
+            const userData: UserType = userDocToUserType(docData);
+            if (userData?.contacts) {
+                delete userData.contacts;
+            }
+            return userData;
+        }
+    } catch (error) {
+        console.log('error getUserById', error);
     }
 };

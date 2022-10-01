@@ -5,13 +5,16 @@ import {
     isAnyOf,
 } from '@reduxjs/toolkit';
 import * as UserService from '@services/UserService';
-import * as SecureStore from 'expo-secure-store';
 import {
     AuthState,
     LoginForm,
     RegisterForm,
     UserType,
-} from 'src/types/UserTypes';
+} from '@src/types/UserTypes';
+import * as SecureStore from 'expo-secure-store';
+
+import { getChatsAction } from './chatsSlice';
+import { getContactsAction } from './contactsSlice';
 
 const initialState: AuthState = {
     user: undefined,
@@ -39,10 +42,12 @@ export const registerAction = createAsyncThunk(
 
 export const getMyProfileAction = createAsyncThunk(
     'auth/getMyProfile',
-    async () => {
+    async (params, { dispatch }) => {
         try {
             const user = await UserService.getMyProfile();
             await SecureStore.setItemAsync('user', JSON.stringify(user));
+            await dispatch(getContactsAction(user?.contacts || []));
+            await dispatch(getChatsAction());
             return user;
         } catch (error) {
             console.log('error', error);

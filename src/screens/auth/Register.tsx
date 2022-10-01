@@ -1,5 +1,6 @@
 import CustomFormControl from '@components/CustomFormControl';
 import { registerAction } from '@features/authSlice';
+import { RegisterForm } from '@src/types/UserTypes';
 import { useAppDispatch } from '@store/index';
 import { AntDesign, MaterialIcons } from 'expo-vector-icons';
 import {
@@ -14,7 +15,6 @@ import {
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Platform } from 'react-native';
-import { RegisterForm } from 'src/types/UserTypes';
 
 const Register = () => {
     const {

@@ -1,6 +1,8 @@
 import CustomFormControl from '@components/CustomFormControl';
 import { loginAction } from '@features/authSlice';
 import { StackScreenProps } from '@react-navigation/stack';
+import { AuthStackParamList } from '@src/types/NavigationTypes';
+import { LoginForm } from '@src/types/UserTypes';
 import { useAppDispatch } from '@store/index';
 import { MaterialIcons } from 'expo-vector-icons';
 import {
@@ -15,8 +17,6 @@ import {
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Platform } from 'react-native';
-import { AuthStackParamList } from 'src/types/NavigationTypes';
-import { LoginForm } from 'src/types/UserTypes';
 
 type Props = StackScreenProps<AuthStackParamList, 'Login'>;
 

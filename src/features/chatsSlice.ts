@@ -91,6 +91,10 @@ export const chatsSlice = createSlice({
         },
         addChat: (state, action) => {
             state.data.push(action.payload);
+            // sort chats by last message
+            state.data = _.sortBy(state.data, (chat) => {
+                return chat.lastMessage?.createdAt;
+            }).reverse();
         },
         removeChat: (state, action) => {
             state.data = state.data.filter(
@@ -104,6 +108,10 @@ export const chatsSlice = createSlice({
                 }
                 return chat;
             });
+            // sort chats by last message
+            state.data = _.sortBy(state.data, (chat) => {
+                return chat.lastMessage?.createdAt;
+            }).reverse();
         },
         addMessageToChat: (state, action) => {
             if (!state.currentChat?.id) {
@@ -124,7 +132,7 @@ export const chatsSlice = createSlice({
                 );
                 console.log('checkIsAdded', checkIsAdded, action.payload.id);
                 if (!checkIsAdded) {
-                    findChatMessage.messages.push(action.payload);
+                    findChatMessage.messages.unshift(action.payload);
                 }
             } else {
                 state.chatMessages?.push({

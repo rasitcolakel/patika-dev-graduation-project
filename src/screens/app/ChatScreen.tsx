@@ -61,7 +61,7 @@ const ChatScreen = ({ navigation, route }: Props) => {
                 currentChat?.id,
                 'messages',
             );
-            const q = query(chatsRef, orderBy('createdAt', 'desc'));
+            const q = query(chatsRef, orderBy('createdAt', 'asc'));
             const unsubscribe = onSnapshot(q, (snapshot) => {
                 snapshot.docChanges().forEach((change) => {
                     dispatch(handleCurrentChatChangeAction(change));

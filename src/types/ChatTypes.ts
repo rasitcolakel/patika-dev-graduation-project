@@ -36,7 +36,7 @@ export type Message = {
     content: ContentType;
     senderId: string;
     type: MessageType;
-    createdAt: string;
+    createdAt: number;
 };
 
 export enum MessageType {

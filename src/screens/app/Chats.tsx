@@ -11,7 +11,13 @@ import {
 } from '@src/types/NavigationTypes';
 import { UserType } from '@src/types/UserTypes';
 import { MaterialIcons } from 'expo-vector-icons';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import {
+    collection,
+    onSnapshot,
+    orderBy,
+    query,
+    where,
+} from 'firebase/firestore';
 import { IconButton, View } from 'native-base';
 import React, { useEffect, useLayoutEffect } from 'react';
 
@@ -34,27 +40,6 @@ const Chats = ({ navigation }: Props) => {
                 />
             ),
         });
-    }, []);
-
-    // listen for chat changes
-    useEffect(() => {
-        if (user?.id) {
-            // get nested collection firebase
-            const chatsRef = collection(db, 'chats');
-
-            const q = query(
-                chatsRef,
-                where('members', 'array-contains', user.id),
-            );
-
-            const unsubscribe = onSnapshot(q, (snapshot) => {
-                snapshot.docChanges().forEach((change) => {
-                    console.log('change', change.doc.id);
-                });
-            });
-
-            return unsubscribe;
-        }
     }, []);
 
     const goToChat = (user: UserType) => {

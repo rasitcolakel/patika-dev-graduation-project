@@ -1,10 +1,12 @@
 import Navigation from '@navigators/index';
-import store from '@store/index';
+import { persistor, store } from '@store/index';
 import { NativeBaseProvider, extendTheme } from 'native-base';
 import React from 'react';
 import 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
+// persistor.purge();
 // Define the config
 const config = {
     useSystemColorMode: true,
@@ -36,9 +38,11 @@ declare module 'native-base' {
 export default function App() {
     return (
         <Provider store={store}>
-            <NativeBaseProvider theme={theme}>
-                <Navigation />
-            </NativeBaseProvider>
+            <PersistGate loading={null} persistor={persistor}>
+                <NativeBaseProvider theme={theme}>
+                    <Navigation />
+                </NativeBaseProvider>
+            </PersistGate>
         </Provider>
     );
 }

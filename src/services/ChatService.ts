@@ -1,5 +1,6 @@
 import { Chat, ChatType, Message, MessageType } from '@src/types/ChatTypes';
 import {
+    Timestamp,
     collection,
     doc,
     getDocs,
@@ -23,6 +24,7 @@ export const createChat = async (userId: string) => {
                 type: ChatType.ONE_TO_ONE,
                 doesConversationStarted: false,
                 lastMessage: null,
+                createdAt: Date.now(),
             };
             const chatsRef = collection(db, 'chats');
             await setDoc(doc(chatsRef, id), chatToAdd);
@@ -67,7 +69,7 @@ export const sendMessage = async (chatId: string, message: string) => {
                 id: user.uid + Date.now().toString(),
                 type: MessageType.TEXT,
                 senderId: user.uid,
-                createdAt: new Date().toISOString(),
+                createdAt: Date.now(),
                 content: {
                     text: message,
                 },

@@ -2,7 +2,6 @@ import CustomToast from '@components/CustomToast';
 import { getMyProfileAction, logoutAction, setUser } from '@features/authSlice';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { auth } from '@services/FirebaseService';
-import { getChatsAction } from '@src/features/chatsSlice';
 import { UserType } from '@src/types/UserTypes';
 import { useAppDispatch, useAppSelector } from '@store/index';
 import * as SecureStore from 'expo-secure-store';

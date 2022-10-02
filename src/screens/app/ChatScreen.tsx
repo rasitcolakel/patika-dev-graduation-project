@@ -1,37 +1,30 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import { createChatAction } from '@src/features/chatsSlice';
-import { sendMessage } from '@src/services/ChatService';
+import { RenderMessage } from '@src/components/RenderMessage';
+import SendMessageView from '@src/components/SendMessageView';
+import {
+    createChatAction,
+    handleCurrentChatChangeAction,
+} from '@src/features/chatsSlice';
+import { db } from '@src/services/FirebaseService';
 import { useAppDispatch, useAppSelector } from '@src/store';
+import { Message } from '@src/types/ChatTypes';
 import { AppStackParamList } from '@src/types/NavigationTypes';
 import { randomColorFromID } from '@utils/ui';
-import { MaterialIcons } from 'expo-vector-icons';
-import {
-    Avatar,
-    HStack,
-    IconButton,
-    Input,
-    View,
-    useColorModeValue,
-    useTheme,
-} from 'native-base';
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import {
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
-    TouchableWithoutFeedback,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { Avatar, FlatList, View } from 'native-base';
+import React, { useEffect, useLayoutEffect } from 'react';
 
 type Props = StackScreenProps<AppStackParamList, 'ChatScreen'>;
 
 const ChatScreen = ({ navigation, route }: Props) => {
-    const [message, setMessage] = useState('');
-    const theme = useTheme();
-    const insets = useSafeAreaInsets();
+    const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.auth.user);
     const currentChat = useAppSelector((state) => state.chats.currentChat);
-    const dispatch = useAppDispatch();
+    const chatMessages = useAppSelector((state) =>
+        state.chats.chatMessages?.find(
+            (chatMessage) => chatMessage.chatId === currentChat?.id,
+        ),
+    );
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -53,96 +46,58 @@ const ChatScreen = ({ navigation, route }: Props) => {
         });
     }, []);
 
-    const [keyboardHeight, setKeyboardHeight] = React.useState(0);
-
+    // create chat if not exist
     useEffect(() => {
         dispatch(createChatAction(route.params.user.id));
-        const showSubscription = Keyboard.addListener(
-            'keyboardDidShow',
-            (e) => {
-                console.log('keyboard will show');
-                setKeyboardHeight(e.endCoordinates.height);
-            },
-        );
-        const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-            console.log('keyboard will hide');
-            setKeyboardHeight(0);
-        });
-
-        return () => {
-            showSubscription.remove();
-            hideSubscription.remove();
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    console.log('keyboardHeight', keyboardHeight);
-    const onSubmit = () => {
-        if (user && currentChat) {
-            sendMessage(currentChat, message);
+    // listen for new messages
+    useEffect(() => {
+        if (currentChat?.id) {
+            // get nested collection firebase
+            const chatsRef = collection(
+                db,
+                'chats',
+                currentChat?.id,
+                'messages',
+            );
+            const q = query(chatsRef, orderBy('createdAt', 'desc'));
+            const unsubscribe = onSnapshot(q, (snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    dispatch(handleCurrentChatChangeAction(change));
+                });
+            });
+
+            return unsubscribe;
         }
+    }, [currentChat]);
+
+    const renderItem = ({ item }: { item: Message }) => {
+        const isMe = item.senderId === user?.id;
+        return (
+            <View
+                px="4"
+                py="1"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent={isMe ? 'flex-end' : 'flex-start'}
+            >
+                <RenderMessage item={item} isMe={isMe} />
+            </View>
+        );
     };
 
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={{
-                flex: 1,
-            }}
-        >
-            <TouchableWithoutFeedback
-                onPress={Keyboard.dismiss}
-                style={{
-                    flex: 1,
-                }}
-            >
-                <View flex={1}>
-                    <View flex={1} />
-                    <HStack
-                        bg={useColorModeValue(
-                            theme.colors.white,
-                            theme.colors.black,
-                        )}
-                        paddingBottom={
-                            keyboardHeight
-                                ? Platform.OS === 'ios'
-                                    ? 103
-                                    : 85
-                                : insets.bottom
-                        }
-                    >
-                        <IconButton
-                            _icon={{
-                                as: MaterialIcons,
-                                name: 'add',
-                            }}
-                            onPress={() => navigation.goBack()}
-                        />
-                        <Input
-                            bg={useColorModeValue(
-                                theme.colors.gray[100],
-                                'gray.700',
-                            )}
-                            borderRadius="full"
-                            flex={1}
-                            h={10}
-                            m={2}
-                            my={1}
-                            placeholder="Type a message"
-                            value={message}
-                            onChangeText={(text) => setMessage(text)}
-                        />
-                        <IconButton
-                            _icon={{
-                                as: MaterialIcons,
-                                name: 'send',
-                            }}
-                            onPress={onSubmit}
-                        />
-                    </HStack>
-                </View>
-            </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+        <View flex={1}>
+            <FlatList
+                inverted
+                flex={1}
+                data={chatMessages?.messages}
+                keyExtractor={(item) => item.id}
+                renderItem={renderItem}
+            />
+            <SendMessageView />
+        </View>
     );
 };
 

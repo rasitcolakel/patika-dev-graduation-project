@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, isAnyOf } from '@reduxjs/toolkit';
 import * as ContactsService from '@services/ContactsService';
 import * as UserService from '@services/UserService';
-import { ContactsState, UserType } from '@src/types/UserTypes';
+import { ContactsState } from '@src/types/UserTypes';
 import { RootState } from '@store/index';
 import { DocumentChange, DocumentData } from 'firebase/firestore';
 import _ from 'lodash';

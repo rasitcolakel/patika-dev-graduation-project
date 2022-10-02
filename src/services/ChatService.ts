@@ -44,6 +44,7 @@ export const getChats = async () => {
             const q = query(
                 chatsRef,
                 where('members', 'array-contains', user.uid),
+                where('doesConversationStarted', '==', true),
             );
             const querySnapshot = await getDocs(q);
             const chats: Chat[] = [];
@@ -83,7 +84,10 @@ export const sendMessage = async (chatId: string, message: string) => {
 export const setLastMessage = async (chatId: string, message: Message) => {
     try {
         const chatRef = doc(db, 'chats', chatId);
-        await updateDoc(chatRef, { lastMessage: message });
+        await updateDoc(chatRef, {
+            lastMessage: message,
+            doesConversationStarted: true,
+        });
     } catch (error) {
         console.log('error', error);
     }

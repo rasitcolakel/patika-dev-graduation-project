@@ -220,3 +220,18 @@ export const getUserById = async (
         console.log('error getUserById', error);
     }
 };
+
+export const getUsersByIds = async (ids: any): Promise<UserType[]> => {
+    const usersQuery = query(collection(db, 'users'), where('id', 'in', ids));
+    const usersQuerySnapshot = await getDocs(usersQuery);
+    const users: UserType[] = [];
+    usersQuerySnapshot.forEach((doc) => {
+        const user = userDocToUserType(doc.data());
+        if (user?.contacts) {
+            delete user.contacts;
+        }
+        users.push(user);
+    });
+    console.log('users', users);
+    return users;
+};

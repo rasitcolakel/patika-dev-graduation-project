@@ -13,7 +13,6 @@ import {
 } from '@src/types/UserTypes';
 import * as SecureStore from 'expo-secure-store';
 
-import { getChatsAction } from './chatsSlice';
 import { getContactsAction } from './contactsSlice';
 
 const initialState: AuthState = {
@@ -47,7 +46,6 @@ export const getMyProfileAction = createAsyncThunk(
             const user = await UserService.getMyProfile();
             await SecureStore.setItemAsync('user', JSON.stringify(user));
             await dispatch(getContactsAction(user?.contacts || []));
-            await dispatch(getChatsAction());
             return user;
         } catch (error) {
             console.log('error', error);

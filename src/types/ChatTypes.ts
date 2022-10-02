@@ -1,15 +1,30 @@
+import { UserType } from './UserTypes';
+
 export type ChatsState = {
     data: Chat[];
     loading: boolean;
-    currentChat: string | undefined;
+    currentChat: CurrentChat | undefined;
+    chatMessages: ChatMessages[] | undefined;
+};
+
+export type ChatMessages = {
+    chatId: string;
+    messages: Message[];
+};
+
+export type CurrentChat = {
+    id: string;
+    members: UserType[] | undefined;
+    messages: Message[] | undefined;
 };
 
 export type Chat = {
     id: string;
     type: ChatType;
-    members: string[];
+    members: UserType[];
     messages: Message[];
     doesConversationStarted: boolean;
+    lastMessage: Message | undefined;
 };
 
 export enum ChatType {
@@ -18,7 +33,7 @@ export enum ChatType {
 }
 export type Message = {
     id: string;
-    content: TextContent | ImageContent | LocationContent;
+    content: ContentType;
     senderId: string;
     type: MessageType;
     createdAt: string;
@@ -29,6 +44,8 @@ export enum MessageType {
     IMAGE = 'image',
     LOCATION = 'location',
 }
+
+export type ContentType = TextContent | ImageContent | LocationContent;
 
 export type TextContent = {
     text: string;

@@ -1,12 +1,19 @@
+import { setToast } from '@src/features/uiSlice';
 import { useKeyboard } from '@src/hooks/useKeyboard';
 import { sendMessage } from '@src/services/ChatService';
-import { useAppSelector } from '@src/store';
+import { useAppDispatch, useAppSelector } from '@src/store';
+import { MessageType } from '@src/types/ChatTypes';
+import * as Location from 'expo-location';
 import { MaterialIcons } from 'expo-vector-icons';
 import {
+    Actionsheet,
     HStack,
+    Icon,
     IconButton,
     Input,
+    Text,
     useColorModeValue,
+    useDisclose,
     useTheme,
 } from 'native-base';
 import React, { useState } from 'react';
@@ -20,10 +27,44 @@ const SendMessageView = () => {
     const keyboardHeight = useKeyboard();
     const user = useAppSelector((state) => state.auth.user);
     const currentChat = useAppSelector((state) => state.chats.currentChat);
+    const { isOpen, onOpen, onClose } = useDisclose();
+    const dispatch = useAppDispatch();
+
     const onSubmit = () => {
-        if (user && currentChat) {
-            sendMessage(currentChat.id, message);
+        if (user && currentChat && message) {
+            sendMessage(currentChat.id, {
+                text: message,
+            });
             setMessage('');
+        }
+    };
+
+    const onShareLocation = async () => {
+        if (user && currentChat) {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                dispatch(
+                    setToast({
+                        title: 'Permission Denied',
+                        message: 'Permission to access location was denied',
+                        variant: 'error',
+                    }),
+                );
+                return;
+            }
+
+            const location = await Location.getCurrentPositionAsync({});
+            console.log(location);
+            if (location) {
+                sendMessage(
+                    currentChat.id,
+                    {
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude,
+                    },
+                    MessageType.LOCATION,
+                );
+            }
         }
     };
     return (
@@ -36,15 +77,57 @@ const SendMessageView = () => {
                         : 0
                     : insets.bottom
             }
+            px={1}
         >
             <IconButton
                 _icon={{
                     as: MaterialIcons,
                     name: 'add',
                 }}
+                onPress={onOpen}
             />
+            <Actionsheet isOpen={isOpen} onClose={onClose}>
+                <Actionsheet.Content>
+                    <Actionsheet.Item p={2}>
+                        <HStack alignItems="center">
+                            <Icon
+                                as={MaterialIcons}
+                                name="camera-alt"
+                                size="xl"
+                                color="primary.500"
+                                mr={2}
+                            />
+                            <Text fontSize="lg">Camera</Text>
+                        </HStack>
+                    </Actionsheet.Item>
+                    <Actionsheet.Item p={2}>
+                        <HStack alignItems="center">
+                            <Icon
+                                as={MaterialIcons}
+                                name="insert-photo"
+                                size="xl"
+                                color="primary.500"
+                                mr={2}
+                            />
+                            <Text fontSize="lg">Photo</Text>
+                        </HStack>
+                    </Actionsheet.Item>
+                    <Actionsheet.Item p={2} onPress={onShareLocation}>
+                        <HStack alignItems="center">
+                            <Icon
+                                as={MaterialIcons}
+                                name="location-on"
+                                size="xl"
+                                color="primary.500"
+                                mr={2}
+                            />
+                            <Text fontSize="lg">Share Your Location</Text>
+                        </HStack>
+                    </Actionsheet.Item>
+                </Actionsheet.Content>
+            </Actionsheet>
             <Input
-                bg={useColorModeValue(theme.colors.gray[100], 'gray.700')}
+                bg={useColorModeValue(theme.colors.gray[100], 'gray.900')}
                 borderRadius="full"
                 flex={1}
                 h={10}

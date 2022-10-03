@@ -1,4 +1,11 @@
-import { Chat, ChatType, Message, MessageType } from '@src/types/ChatTypes';
+import {
+    Chat,
+    ChatType,
+    ContentType,
+    LocationContent,
+    Message,
+    MessageType,
+} from '@src/types/ChatTypes';
 import {
     Timestamp,
     collection,
@@ -61,19 +68,26 @@ export const getChats = async () => {
     }
 };
 
-export const sendMessage = async (chatId: string, message: string) => {
+const isLocationType = (message: Message) => {
+    return message.type === MessageType.LOCATION;
+};
+
+export const sendMessage = async (
+    chatId: string,
+    message: ContentType,
+    type: MessageType = MessageType.TEXT,
+) => {
     try {
         const user = auth.currentUser;
         if (user) {
             const messageToAdd: Message = {
                 id: user.uid + Date.now().toString(),
-                type: MessageType.TEXT,
+                type,
                 senderId: user.uid,
                 createdAt: Date.now(),
-                content: {
-                    text: message,
-                },
+                content: message,
             };
+
             await setLastMessage(chatId, messageToAdd);
             const messagesRef = collection(db, 'chats', chatId, 'messages');
             await setDoc(doc(messagesRef, messageToAdd.id), messageToAdd);

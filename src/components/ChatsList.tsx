@@ -72,9 +72,21 @@ const ChatLists = ({ goToChat }: Props) => {
                 </Text>
             );
         } else if (item.type === 'image') {
-            return <Text>Image</Text>;
+            return (
+                <HStack alignItems="center">
+                    {isMe && <Text bold>You: </Text>}
+                    <Icon as={MaterialIcons} name="camera-alt" size="sm" />
+                    <Text>Photo</Text>
+                </HStack>
+            );
         } else if (item.type === 'location') {
-            return <Text>Location</Text>;
+            return (
+                <HStack alignItems="center">
+                    {isMe && <Text bold>You: </Text>}
+                    <Icon as={MaterialIcons} name="location-on" size="sm" />
+                    <Text>Shared Location</Text>
+                </HStack>
+            );
         } else {
             return <></>;
         }

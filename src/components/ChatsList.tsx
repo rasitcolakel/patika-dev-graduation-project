@@ -75,7 +75,12 @@ const ChatLists = ({ goToChat }: Props) => {
             return (
                 <HStack alignItems="center">
                     {isMe && <Text bold>You: </Text>}
-                    <Icon as={MaterialIcons} name="camera-alt" size="sm" />
+                    <Icon
+                        as={MaterialIcons}
+                        name="camera-alt"
+                        size="sm"
+                        mr={1}
+                    />
                     <Text>Photo</Text>
                 </HStack>
             );
@@ -83,7 +88,12 @@ const ChatLists = ({ goToChat }: Props) => {
             return (
                 <HStack alignItems="center">
                     {isMe && <Text bold>You: </Text>}
-                    <Icon as={MaterialIcons} name="location-on" size="sm" />
+                    <Icon
+                        as={MaterialIcons}
+                        name="location-on"
+                        size="sm"
+                        mr={1}
+                    />
                     <Text>Shared Location</Text>
                 </HStack>
             );

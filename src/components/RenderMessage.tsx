@@ -5,8 +5,9 @@ import {
     MessageType,
     TextContent,
 } from '@src/types/ChatTypes';
-import { Text, View, useColorModeValue } from 'native-base';
+import { Image, Text, View, useColorModeValue } from 'native-base';
 import React from 'react';
+import { Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Animated, { BounceInLeft, BounceInRight } from 'react-native-reanimated';
 
@@ -37,12 +38,28 @@ export const RenderMessage = ({ item, isMe }: Props) => {
         );
     } else if (item.type === MessageType.IMAGE) {
         const content = item.content as ImageContent;
-        return <Text>Image</Text>;
+        return (
+            <CustomAnimatedView
+                entering={isMe ? BounceInRight : BounceInLeft}
+                p={0.5}
+                maxWidth="60%"
+                bg={isMe ? 'blue.500' : isDark ? 'gray.700' : 'gray.200'}
+                borderRadius="lg"
+            >
+                <Image
+                    source={{ uri: content.uri }}
+                    alt="image"
+                    size="2xl"
+                    borderRadius="lg"
+                />
+            </CustomAnimatedView>
+        );
     } else if (item.type === MessageType.LOCATION) {
         const content = item.content as LocationContent;
         return (
-            <View
-                h={140}
+            <CustomAnimatedView
+                entering={isMe ? BounceInRight : BounceInLeft}
+                h={Dimensions.get('window').height / 5}
                 width="3/4"
                 bg={isMe ? 'blue.500' : isDark ? 'gray.700' : 'gray.200'}
                 p={0.5}
@@ -69,7 +86,7 @@ export const RenderMessage = ({ item, isMe }: Props) => {
                         }}
                     />
                 </MapView>
-            </View>
+            </CustomAnimatedView>
         );
     }
 

@@ -1,8 +1,11 @@
 import { setToast } from '@src/features/uiSlice';
 import { useKeyboard } from '@src/hooks/useKeyboard';
 import { sendMessage } from '@src/services/ChatService';
+import { uploadImage } from '@src/services/ImageService';
 import { useAppDispatch, useAppSelector } from '@src/store';
 import { MessageType } from '@src/types/ChatTypes';
+import { manipulateAsync } from 'expo-image-manipulator';
+import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import { MaterialIcons } from 'expo-vector-icons';
 import {
@@ -41,7 +44,8 @@ const SendMessageView = () => {
 
     const onShareLocation = async () => {
         if (user && currentChat) {
-            let { status } = await Location.requestForegroundPermissionsAsync();
+            const { status } =
+                await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
                 dispatch(
                     setToast({
@@ -67,6 +71,46 @@ const SendMessageView = () => {
             }
         }
     };
+
+    const onShareImage = async () => {
+        if (user && currentChat) {
+            let imageUri = '';
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                quality: 0.4,
+                allowsEditing: true,
+            });
+
+            if (!result.cancelled) {
+                if (result.fileSize && result.fileSize > 100000) {
+                    const resizedImage = await manipulateAsync(
+                        result.uri,
+                        [
+                            {
+                                resize: {
+                                    width: result.width / 3,
+                                    height: result.height / 3,
+                                },
+                            },
+                        ],
+                        { compress: 0.5 },
+                    );
+                    imageUri = resizedImage.uri;
+                } else {
+                    imageUri = result.uri;
+                }
+                const uploadedImage = await uploadImage(imageUri);
+                sendMessage(
+                    currentChat.id,
+                    {
+                        uri: uploadedImage,
+                    },
+                    MessageType.IMAGE,
+                );
+            }
+        }
+    };
+
     return (
         <HStack
             bg={useColorModeValue(theme.colors.white, theme.colors.black)}
@@ -100,7 +144,7 @@ const SendMessageView = () => {
                             <Text fontSize="lg">Camera</Text>
                         </HStack>
                     </Actionsheet.Item>
-                    <Actionsheet.Item p={2}>
+                    <Actionsheet.Item p={2} onPress={onShareImage}>
                         <HStack alignItems="center">
                             <Icon
                                 as={MaterialIcons}

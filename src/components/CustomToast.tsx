@@ -1,12 +1,13 @@
 import { AntDesign } from '@expo/vector-icons';
-import { useAppSelector } from '@store/index';
+import { clearToast, setToast } from '@src/features/uiSlice';
+import { useAppDispatch, useAppSelector } from '@store/index';
 import { Box, Text, View, useToast } from 'native-base';
 import React, { useEffect } from 'react';
 
 const CustomToast = () => {
     const toast = useToast();
     const toastState = useAppSelector((state) => state.ui.toast);
-
+    const dispatch = useAppDispatch();
     const variantColors = {
         success: 'green.500',
         error: 'red.500',
@@ -57,6 +58,14 @@ const CustomToast = () => {
                 );
             },
         });
+    }, [toastState]);
+
+    // clear toast state
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            dispatch(clearToast());
+        }, 3000);
+        return () => clearTimeout(timer);
     }, [toastState]);
 
     return <></>;

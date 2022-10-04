@@ -2,6 +2,7 @@ import { getContactsAction } from '@features/contactsSlice';
 import { useNavigation } from '@react-navigation/native';
 import { Chat, Message, TextContent } from '@src/types/ChatTypes';
 import { UserType } from '@src/types/UserTypes';
+import { getHHMMFromUTC } from '@src/utils/dateUtils';
 import { useAppDispatch, useAppSelector } from '@store/index';
 import { randomColorFromID } from '@utils/ui';
 import { MaterialIcons } from 'expo-vector-icons';
@@ -29,6 +30,7 @@ const ChatLists = ({ goToChat }: Props) => {
     const chats = useAppSelector((state) => state.chats.data);
     const userContacts = useAppSelector((state) => state.auth.user?.contacts);
     const dispatch = useAppDispatch();
+
     useEffect(() => {
         if (userContacts?.length) {
             dispatch(getContactsAction(userContacts));
@@ -118,11 +120,17 @@ const ChatLists = ({ goToChat }: Props) => {
                             recevier?.firstName[0] + recevier?.lastName[0]}
                     </Avatar>
                     <VStack flex="1" justifyContent="center">
-                        <Text flexGrow={1}>
+                        <Text bold>
                             {recevier?.firstName} {recevier?.lastName}
                         </Text>
-                        {renderLastMessage(item.lastMessage)}
+                        {item.lastMessage &&
+                            renderLastMessage(item.lastMessage)}
                     </VStack>
+                    {item.lastMessage && (
+                        <Text alignSelf="flex-start" opacity={0.6}>
+                            {getHHMMFromUTC(item.lastMessage.createdAt)}
+                        </Text>
+                    )}
                 </HStack>
             </Pressable>
         );

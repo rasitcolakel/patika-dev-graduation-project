@@ -20,7 +20,7 @@ import {
     useTheme,
 } from 'native-base';
 import React, { useState } from 'react';
-import { Platform } from 'react-native';
+import { Keyboard, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const SendMessageView = () => {
@@ -58,7 +58,7 @@ const SendMessageView = () => {
             }
 
             const location = await Location.getCurrentPositionAsync({});
-            console.log(location);
+
             if (location) {
                 sendMessage(
                     currentChat.id,
@@ -69,6 +69,7 @@ const SendMessageView = () => {
                     MessageType.LOCATION,
                 );
             }
+            onClose();
         }
     };
 
@@ -108,7 +109,13 @@ const SendMessageView = () => {
                     MessageType.IMAGE,
                 );
             }
+            onClose();
         }
+    };
+
+    const onActionSheetOpen = () => {
+        Keyboard.dismiss();
+        onOpen();
     };
 
     return (
@@ -128,7 +135,7 @@ const SendMessageView = () => {
                     as: MaterialIcons,
                     name: 'add',
                 }}
-                onPress={onOpen}
+                onPress={onActionSheetOpen}
             />
             <Actionsheet isOpen={isOpen} onClose={onClose}>
                 <Actionsheet.Content>

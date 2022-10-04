@@ -95,6 +95,10 @@ const ChatScreen = ({ navigation, route }: Props) => {
                 data={chatMessages?.messages}
                 keyExtractor={(item) => item.id}
                 renderItem={renderItem}
+                // performance settings
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                windowSize={10}
             />
             <SendMessageView />
         </View>

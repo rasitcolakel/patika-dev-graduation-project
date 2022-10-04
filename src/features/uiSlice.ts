@@ -23,6 +23,9 @@ export const uiSlice = createSlice({
                 ...action.payload,
             };
         },
+        clearToast: (state) => {
+            state.toast = null;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -57,6 +60,6 @@ export const uiSlice = createSlice({
     },
 });
 
-export const { setToast } = uiSlice.actions;
+export const { setToast, clearToast } = uiSlice.actions;
 
 export default uiSlice.reducer;

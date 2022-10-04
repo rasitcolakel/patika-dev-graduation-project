@@ -54,7 +54,6 @@ export const RenderMessage = ({ item, isMe }: Props) => {
         );
     } else if (item.type === MessageType.IMAGE) {
         const content = item.content as ImageContent;
-        console.log('item.createdAt', item.createdAt);
         return (
             <CustomAnimatedView
                 entering={isMe ? BounceInRight : BounceInLeft}
@@ -65,7 +64,7 @@ export const RenderMessage = ({ item, isMe }: Props) => {
                 <CachedImage
                     source={{
                         uri: `${content.uri}`,
-                        expiresIn: 2_628_288,
+                        expiresIn: 60 * 60 * 24 * 7,
                     }}
                     cacheKey={`${item.id}-thumb`}
                     placeholderContent={

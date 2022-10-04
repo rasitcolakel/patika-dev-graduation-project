@@ -20,6 +20,7 @@ import {
 } from 'firebase/firestore';
 import { Avatar, FlatList, Text, View } from 'native-base';
 import React, { useEffect, useLayoutEffect } from 'react';
+import { Platform } from 'react-native';
 
 type Props = StackScreenProps<AppStackParamList, 'ChatScreen'>;
 
@@ -44,7 +45,9 @@ const ChatScreen = ({ navigation, route }: Props) => {
     useLayoutEffect(() => {
         navigation.setOptions({
             headerTitle: () => (
-                <View alignItems="center">
+                <View
+                    alignItems={Platform.OS === 'ios' ? 'center' : 'flex-start'}
+                >
                     <Text bold fontSize="sm">
                         {route.params.user.firstName +
                             ' ' +

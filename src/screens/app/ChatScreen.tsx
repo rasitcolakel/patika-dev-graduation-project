@@ -9,9 +9,16 @@ import { db } from '@src/services/FirebaseService';
 import { useAppDispatch, useAppSelector } from '@src/store';
 import { Message } from '@src/types/ChatTypes';
 import { AppStackParamList } from '@src/types/NavigationTypes';
+import { getLastSeenFromUTC } from '@src/utils/dateUtils';
 import { randomColorFromID } from '@utils/ui';
-import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
-import { Avatar, FlatList, View } from 'native-base';
+import {
+    collection,
+    doc,
+    onSnapshot,
+    orderBy,
+    query,
+} from 'firebase/firestore';
+import { Avatar, FlatList, Text, View } from 'native-base';
 import React, { useEffect, useLayoutEffect } from 'react';
 
 type Props = StackScreenProps<AppStackParamList, 'ChatScreen'>;
@@ -26,10 +33,31 @@ const ChatScreen = ({ navigation, route }: Props) => {
         ),
     );
 
+    const [chattingUserStatus, setChattingUserStatus] = React.useState<{
+        isOnline: boolean;
+        lastSeen: number;
+    }>({
+        isOnline: false,
+        lastSeen: 0,
+    });
+
     useLayoutEffect(() => {
         navigation.setOptions({
-            title:
-                route.params.user.firstName + ' ' + route.params.user.lastName,
+            headerTitle: () => (
+                <View alignItems="center">
+                    <Text bold fontSize="sm">
+                        {route.params.user.firstName +
+                            ' ' +
+                            route.params.user.lastName}
+                    </Text>
+                    <Text fontSize="10" opacity={0.7}>
+                        {chattingUserStatus.isOnline
+                            ? 'Online'
+                            : 'last seen ' +
+                              getLastSeenFromUTC(chattingUserStatus.lastSeen)}
+                    </Text>
+                </View>
+            ),
             headerRight: () => (
                 <Avatar
                     bg={randomColorFromID(route.params.user.id) + '.500'}
@@ -39,12 +67,19 @@ const ChatScreen = ({ navigation, route }: Props) => {
                         uri: route.params.user.photoURL,
                     }}
                 >
+                    <Avatar.Badge
+                        bg={
+                            chattingUserStatus.isOnline
+                                ? 'green.500'
+                                : 'red.500'
+                        }
+                    />
                     {route.params.user.firstName[0] +
                         route.params.user.lastName[0]}
                 </Avatar>
             ),
         });
-    }, []);
+    }, [chattingUserStatus]);
 
     // create chat if not exist
     useEffect(() => {
@@ -72,6 +107,20 @@ const ChatScreen = ({ navigation, route }: Props) => {
         }
     }, [currentChat]);
 
+    useEffect(() => {
+        if (route.params.user.id) {
+            const chatsRef = doc(db, 'users', route.params.user.id);
+            const unsubscribe = onSnapshot(chatsRef, (snapshot) => {
+                setChattingUserStatus({
+                    isOnline: snapshot.data()?.isOnline,
+                    lastSeen: snapshot.data()?.lastSeen,
+                });
+            });
+
+            return unsubscribe;
+        }
+    }, [route.params.user.id]);
+    console.log('chattingUserStatus', chattingUserStatus);
     const renderItem = ({ item }: { item: Message }) => {
         const isMe = item.senderId === user?.id;
         return (

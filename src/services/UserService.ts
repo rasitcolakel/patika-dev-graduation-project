@@ -17,6 +17,7 @@ import {
     getDocs,
     query,
     setDoc,
+    updateDoc,
     where,
 } from 'firebase/firestore';
 
@@ -234,4 +235,20 @@ export const getUsersByIds = async (ids: any): Promise<UserType[]> => {
     });
     console.log('users', users);
     return users;
+};
+
+export const setUserStatus = async (isOnline: boolean): Promise<void> => {
+    try {
+        const user = auth.currentUser;
+        if (user) {
+            const userDoc = doc(db, 'users', user.uid);
+            const response = await updateDoc(userDoc, {
+                isOnline,
+                lastSeen: Date.now(),
+            });
+            return response;
+        }
+    } catch (error) {
+        console.log(error);
+    }
 };

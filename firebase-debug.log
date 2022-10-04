@@ -1,0 +1,124 @@
+[debug] [2022-10-04T23:14:34.090Z] ----------------------------------------------------------------------
+[debug] [2022-10-04T23:14:34.091Z] Command:       /Users/rasitcolakel/.nvm/versions/node/v16.14.2/bin/node /Users/rasitcolakel/.nvm/versions/node/v16.14.2/bin/firebase deploy
+[debug] [2022-10-04T23:14:34.092Z] CLI Version:   11.13.0
+[debug] [2022-10-04T23:14:34.093Z] Platform:      darwin
+[debug] [2022-10-04T23:14:34.093Z] Node Version:  v16.14.2
+[debug] [2022-10-04T23:14:34.103Z] Time:          Wed Oct 05 2022 02:14:34 GMT+0300 (GMT+03:00)
+[debug] [2022-10-04T23:14:34.104Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-10-04T23:14:34.264Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-10-04T23:14:34.267Z] > authorizing via signed-in user (rasitcolakel@gmail.com)
+[debug] [2022-10-04T23:14:34.268Z] [iam] checking project patika-graduation-project for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2022-10-04T23:14:34.273Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/patika-graduation-project:testIamPermissions [none]
+[debug] [2022-10-04T23:14:34.274Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/patika-graduation-project:testIamPermissions x-goog-quota-user=projects/patika-graduation-project
+[debug] [2022-10-04T23:14:34.275Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/patika-graduation-project:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2022-10-04T23:14:35.408Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/patika-graduation-project:testIamPermissions 200
+[debug] [2022-10-04T23:14:35.412Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/patika-graduation-project:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2022-10-04T23:14:35.413Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/patika-graduation-project/serviceAccounts/patika-graduation-project@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2022-10-04T23:14:35.414Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/patika-graduation-project/serviceAccounts/patika-graduation-project@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2022-10-04T23:14:36.584Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/patika-graduation-project/serviceAccounts/patika-graduation-project@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2022-10-04T23:14:36.586Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/patika-graduation-project/serviceAccounts/patika-graduation-project@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'patika-graduation-project'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
+[info] ✔  functions: Finished running predeploy script. 
+[debug] [2022-10-04T23:14:48.633Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/patika-graduation-project [none]
+[debug] [2022-10-04T23:14:49.663Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/patika-graduation-project 200
+[debug] [2022-10-04T23:14:49.665Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/patika-graduation-project {"projectId":"patika-graduation-project","projectNumber":"1022665853162","displayName":"Patika Graduation Project","name":"projects/patika-graduation-project","resources":{"hostingSite":"patika-graduation-project","realtimeDatabaseInstance":"patika-graduation-project-default-rtdb","storageBucket":"patika-graduation-project.appspot.com","locationId":"europe-west"},"state":"ACTIVE","etag":"1_44bc86d5-5d0b-4295-bd3d-4bf1b1de59ac"}
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2022-10-04T23:14:49.672Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/cloudfunctions.googleapis.com [none]
+[debug] [2022-10-04T23:14:49.673Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/patika-graduation-project
+[debug] [2022-10-04T23:14:49.682Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/runtimeconfig.googleapis.com [none]
+[debug] [2022-10-04T23:14:49.684Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/patika-graduation-project
+[debug] [2022-10-04T23:14:49.690Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/cloudbuild.googleapis.com [none]
+[debug] [2022-10-04T23:14:49.691Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/cloudbuild.googleapis.com x-goog-quota-user=projects/patika-graduation-project
+[debug] [2022-10-04T23:14:49.695Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/artifactregistry.googleapis.com [none]
+[debug] [2022-10-04T23:14:49.696Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/artifactregistry.googleapis.com x-goog-quota-user=projects/patika-graduation-project
+[debug] [2022-10-04T23:14:51.063Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/runtimeconfig.googleapis.com 200
+[debug] [2022-10-04T23:14:51.067Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2022-10-04T23:14:51.070Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/artifactregistry.googleapis.com 200
+[debug] [2022-10-04T23:14:51.071Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/artifactregistry.googleapis.com [omitted]
+[info] ✔  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2022-10-04T23:14:51.075Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/cloudfunctions.googleapis.com 200
+[debug] [2022-10-04T23:14:51.075Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/cloudfunctions.googleapis.com [omitted]
+[info] ✔  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2022-10-04T23:14:51.077Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/cloudbuild.googleapis.com 200
+[debug] [2022-10-04T23:14:51.077Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/patika-graduation-project/services/cloudbuild.googleapis.com [omitted]
+[info] ✔  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2022-10-04T23:14:51.078Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/patika-graduation-project/adminSdkConfig [none]
+[debug] [2022-10-04T23:14:51.594Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/patika-graduation-project/adminSdkConfig 200
+[debug] [2022-10-04T23:14:51.599Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/patika-graduation-project/adminSdkConfig {"projectId":"patika-graduation-project","databaseURL":"https://patika-graduation-project-default-rtdb.europe-west1.firebasedatabase.app","storageBucket":"patika-graduation-project.appspot.com","locationId":"europe-west"}
+[debug] [2022-10-04T23:14:51.601Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/patika-graduation-project/configs [none]
+[debug] [2022-10-04T23:14:52.029Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/patika-graduation-project/configs 200
+[debug] [2022-10-04T23:14:52.029Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/patika-graduation-project/configs {}
+[info] i  functions: preparing codebase default for deployment 
+[debug] [2022-10-04T23:14:52.036Z] Validating nodejs source
+[debug] [2022-10-04T23:14:53.732Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^10.0.2",
+    "firebase-functions": "^3.18.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^0.2.0",
+    "typescript": "^4.5.4"
+  },
+  "private": true
+}
+[debug] [2022-10-04T23:14:53.733Z] Building nodejs source
+[debug] [2022-10-04T23:14:53.735Z] Could not find functions.yaml. Must use http discovery
+[debug] [2022-10-04T23:14:54.030Z] Serving at port 9005
+
+[debug] [2022-10-04T23:14:54.095Z] Got response from /__/functions.yaml {"endpoints":{"onMessageCreate":{"platform":"gcfv1","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","eventFilters":{"resource":"projects/patika-graduation-project/databases/(default)/documents/chats/{chatId}/messages/{messageId}"},"retry":false},"labels":{},"entryPoint":"onMessageCreate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2022-10-04T23:14:54.111Z] shutdown requested via /__/quitquitquit
+
+[info] i  functions: preparing functions directory for uploading... 
+[info] i  functions: packaged /Users/rasitcolakel/Desktop/Ben/patika-dev-gradution-assignment/functions (95.95 KB) for uploading 
+[debug] [2022-10-04T23:14:54.223Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/projects/patika-graduation-project/locations/-/functions [none]
+[debug] [2022-10-04T23:14:54.972Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/projects/patika-graduation-project/locations/-/functions 200
+[debug] [2022-10-04T23:14:54.973Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/projects/patika-graduation-project/locations/-/functions {"functions":[{"name":"projects/patika-graduation-project/locations/us-central1/functions/helloWorld","httpsTrigger":{"url":"https://us-central1-patika-graduation-project.cloudfunctions.net/helloWorld","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"helloWorld","timeout":"60s","availableMemoryMb":256,"serviceAccountEmail":"patika-graduation-project@appspot.gserviceaccount.com","updateTime":"2022-10-04T23:09:01.946Z","versionId":"1","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"1aa2357bbee0a90358ee021354736d1cabc0d9ca"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-888970501319.us-central1.cloudfunctions.appspot.com/bdc8f488-50a4-4820-bab7-2e7c3fbd719b.zip","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"patika-graduation-project\",\"databaseURL\":\"https://patika-graduation-project-default-rtdb.europe-west1.firebasedatabase.app\",\"storageBucket\":\"patika-graduation-project.appspot.com\",\"locationId\":\"europe-west\"}","GCLOUD_PROJECT":"patika-graduation-project"},"runtime":"nodejs16","ingressSettings":"ALLOW_ALL","buildId":"71158070-09e9-4f1f-a40a-7c157433fbce","buildName":"projects/1022665853162/locations/us-central1/builds/71158070-09e9-4f1f-a40a-7c157433fbce","dockerRegistry":"ARTIFACT_REGISTRY"}]}
+[debug] [2022-10-04T23:14:54.976Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/patika-graduation-project/locations/-/functions filter=environment%3D%22GEN_2%22
+[debug] [2022-10-04T23:14:56.198Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/patika-graduation-project/locations/-/functions 200
+[debug] [2022-10-04T23:14:56.199Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/patika-graduation-project/locations/-/functions {}
+[debug] [2022-10-04T23:14:56.216Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/patika-graduation-project [none]
+[debug] [2022-10-04T23:14:56.593Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/patika-graduation-project 200
+[debug] [2022-10-04T23:14:56.594Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/patika-graduation-project {"projectId":"patika-graduation-project","projectNumber":"1022665853162","displayName":"Patika Graduation Project","name":"projects/patika-graduation-project","resources":{"hostingSite":"patika-graduation-project","realtimeDatabaseInstance":"patika-graduation-project-default-rtdb","storageBucket":"patika-graduation-project.appspot.com","locationId":"europe-west"},"state":"ACTIVE","etag":"1_c689a7d3-0cda-4c20-bdc7-10e3980bc400"}
+[debug] [2022-10-04T23:14:56.599Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v1/projects/patika-graduation-project/locations/us-central1/functions:generateUploadUrl [none]
+[debug] [2022-10-04T23:14:56.599Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/patika-graduation-project/locations/us-central1/functions:generateUploadUrl {}
+[debug] [2022-10-04T23:14:57.319Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v1/projects/patika-graduation-project/locations/us-central1/functions:generateUploadUrl 200
+[debug] [2022-10-04T23:14:57.320Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/patika-graduation-project/locations/us-central1/functions:generateUploadUrl {"uploadUrl":"https://storage.googleapis.com/uploads-888970501319.us-central1.cloudfunctions.appspot.com/e0b1555d-4746-4c34-851a-1afdb1a7420a.zip?GoogleAccessId=service-1022665853162@gcf-admin-robot.iam.gserviceaccount.com&Expires=1664927097&Signature=Orxdn6M4MYwZc9sMnA8l%2B0tm0Xy%2BhaXHU4rYlERoe6RUbnum1YlJxBMYl4jPOEr8KUK0nilS5cMFRIct5YyihdEw3lVcNVnwqgyYNuzkKLNdflIWGLoEg7picXUeAT9NKw3QMg48vLikE21PVt6e%2BAn9e2MuU2CEFIgcnz%2BfHSnLRse2TA9BWnmrDu3rIG3dQiijh7FGRklVcXOMoTamE56%2Fk%2BPnrX3O3PgJFoPUSMcj1Aj%2Faa4WQYOHilm2fsEKGzMMygp%2BV2ywUG5Ger%2FjGVtnM9bfKMdLStUERC8XTZBwIWxjYEIdcZjDkLECaY96p%2Fr27EBCQp7fFj5Wjyj4Yw%3D%3D"}
+[debug] [2022-10-04T23:14:57.321Z] >>> [apiv2][query] PUT https://storage.googleapis.com/uploads-888970501319.us-central1.cloudfunctions.appspot.com/e0b1555d-4746-4c34-851a-1afdb1a7420a.zip GoogleAccessId=service-1022665853162%40gcf-admin-robot.iam.gserviceaccount.com&Expires=1664927097&Signature=Orxdn6M4MYwZc9sMnA8l%2B0tm0Xy%2BhaXHU4rYlERoe6RUbnum1YlJxBMYl4jPOEr8KUK0nilS5cMFRIct5YyihdEw3lVcNVnwqgyYNuzkKLNdflIWGLoEg7picXUeAT9NKw3QMg48vLikE21PVt6e%2BAn9e2MuU2CEFIgcnz%2BfHSnLRse2TA9BWnmrDu3rIG3dQiijh7FGRklVcXOMoTamE56%2Fk%2BPnrX3O3PgJFoPUSMcj1Aj%2Faa4WQYOHilm2fsEKGzMMygp%2BV2ywUG5Ger%2FjGVtnM9bfKMdLStUERC8XTZBwIWxjYEIdcZjDkLECaY96p%2Fr27EBCQp7fFj5Wjyj4Yw%3D%3D
+[debug] [2022-10-04T23:14:57.321Z] >>> [apiv2][body] PUT https://storage.googleapis.com/uploads-888970501319.us-central1.cloudfunctions.appspot.com/e0b1555d-4746-4c34-851a-1afdb1a7420a.zip [stream]
+[debug] [2022-10-04T23:14:57.938Z] <<< [apiv2][status] PUT https://storage.googleapis.com/uploads-888970501319.us-central1.cloudfunctions.appspot.com/e0b1555d-4746-4c34-851a-1afdb1a7420a.zip 200
+[debug] [2022-10-04T23:14:57.939Z] <<< [apiv2][body] PUT https://storage.googleapis.com/uploads-888970501319.us-central1.cloudfunctions.appspot.com/e0b1555d-4746-4c34-851a-1afdb1a7420a.zip [omitted]
+[info] ✔  functions: functions folder uploaded successfully 
+[info] 
+The following functions are found in your project but do not exist in your local source code:
+	helloWorld(us-central1)
+
+If you are renaming a function or changing its region, it is recommended that you create the new function first before deleting the old one to prevent event loss. For more info, visit https://firebase.google.com/docs/functions/manage-functions#modify
+

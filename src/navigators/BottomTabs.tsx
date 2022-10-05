@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { CompositeScreenProps } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Chats from '@screens/app/Chats';
 import Settings from '@screens/app/Settings';
@@ -6,6 +7,7 @@ import { getUserById } from '@src/services/UserService';
 import {
     AppStackParamList,
     BottomTabsParamList,
+    ContactsStackParamList,
 } from '@src/types/NavigationTypes';
 import * as Notifications from 'expo-notifications';
 import { MaterialIcons } from 'expo-vector-icons';
@@ -44,8 +46,11 @@ const BottomTabs = ({ navigation }: Props) => {
                     if (data.type === 'message') {
                         const user = await getUserById(data.senderId as string);
                         if (user) {
-                            navigation.navigate('ChatScreen', {
-                                user,
+                            navigation.navigate('ChatStack', {
+                                screen: 'ChatScreen',
+                                params: {
+                                    user,
+                                },
                             });
                         }
                     }

@@ -23,7 +23,12 @@ const Contacts = ({ navigation }: Props) => {
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
     const goToChat = (user: UserType) => {
-        navigation.push('ChatScreen', { user });
+        navigation.navigate('ChatStack', {
+            screen: 'ChatScreen',
+            params: {
+                user,
+            },
+        });
     };
 
     // onsnapshot

@@ -1,4 +1,5 @@
 export const randomColorFromID = (id: string) => {
+    console.log('id', id);
     const onlyNumbers = id.replace(/\D/g, '');
     const colors = [
         'amber',

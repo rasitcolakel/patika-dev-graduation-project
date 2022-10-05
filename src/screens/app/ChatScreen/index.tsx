@@ -8,7 +8,7 @@ import {
 import { db } from '@src/services/FirebaseService';
 import { useAppDispatch, useAppSelector } from '@src/store';
 import { Message } from '@src/types/ChatTypes';
-import { AppStackParamList } from '@src/types/NavigationTypes';
+import { ChatScreenStackParamList } from '@src/types/NavigationTypes';
 import { getLastSeenFromUTC } from '@src/utils/dateUtils';
 import { randomColorFromID } from '@utils/ui';
 import {
@@ -22,7 +22,7 @@ import { Avatar, FlatList, Text, View } from 'native-base';
 import React, { useEffect, useLayoutEffect } from 'react';
 import { Platform } from 'react-native';
 
-type Props = StackScreenProps<AppStackParamList, 'ChatScreen'>;
+type Props = StackScreenProps<ChatScreenStackParamList, 'ChatScreen'>;
 
 const ChatScreen = ({ navigation, route }: Props) => {
     const dispatch = useAppDispatch();
@@ -41,6 +41,16 @@ const ChatScreen = ({ navigation, route }: Props) => {
         isOnline: false,
         lastSeen: 0,
     });
+
+    const goToMessageDetail = (message: Message) => {
+        if (!user) {
+            return;
+        }
+        navigation.navigate('MessageDetail', {
+            message,
+            user: message.senderId === user?.id ? user : route.params.user,
+        });
+    };
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -123,7 +133,7 @@ const ChatScreen = ({ navigation, route }: Props) => {
             return unsubscribe;
         }
     }, [route.params.user.id]);
-    console.log('chattingUserStatus', chattingUserStatus);
+
     const renderItem = ({ item }: { item: Message }) => {
         const isMe = item.senderId === user?.id;
         return (
@@ -134,7 +144,11 @@ const ChatScreen = ({ navigation, route }: Props) => {
                 alignItems="center"
                 justifyContent={isMe ? 'flex-end' : 'flex-start'}
             >
-                <RenderMessage item={item} isMe={isMe} />
+                <RenderMessage
+                    item={item}
+                    isMe={isMe}
+                    goToMessageDetail={goToMessageDetail}
+                />
             </View>
         );
     };

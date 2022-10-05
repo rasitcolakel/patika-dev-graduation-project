@@ -1,3 +1,6 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
+
+import { Message } from './ChatTypes';
 import { UserType } from './UserTypes';
 
 export type AuthStackParamList = {
@@ -8,7 +11,7 @@ export type AuthStackParamList = {
 
 export type AppStackParamList = {
     BottomTabs: BottomTabsParamList;
-    ChatScreen: { user: UserType };
+    ChatStack: NavigatorScreenParams<ChatScreenStackParamList>;
 };
 
 export type BottomTabsParamList = {
@@ -20,4 +23,9 @@ export type BottomTabsParamList = {
 export type ContactsStackParamList = {
     Contacts: undefined;
     AddContact: undefined;
+};
+
+export type ChatScreenStackParamList = {
+    ChatScreen: { user: UserType };
+    MessageDetail: { message: Message; user: UserType };
 };

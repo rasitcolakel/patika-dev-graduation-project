@@ -11,13 +11,7 @@ import {
 } from '@src/types/NavigationTypes';
 import { UserType } from '@src/types/UserTypes';
 import { MaterialIcons } from 'expo-vector-icons';
-import {
-    collection,
-    onSnapshot,
-    orderBy,
-    query,
-    where,
-} from 'firebase/firestore';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { IconButton, View } from 'native-base';
 import React, { useEffect, useLayoutEffect } from 'react';
 
@@ -27,7 +21,6 @@ type Props = CompositeScreenProps<
 >;
 const Chats = ({ navigation }: Props) => {
     const user = useAppSelector((state) => state.auth.user);
-    const chats = useAppSelector((state) => state.chats.data);
     const dispatch = useAppDispatch();
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -43,7 +36,12 @@ const Chats = ({ navigation }: Props) => {
     }, []);
 
     const goToChat = (user: UserType) => {
-        navigation.push('ChatScreen', { user });
+        navigation.navigate('ChatStack', {
+            screen: 'ChatScreen',
+            params: {
+                user,
+            },
+        });
     };
 
     // listen for chat changes

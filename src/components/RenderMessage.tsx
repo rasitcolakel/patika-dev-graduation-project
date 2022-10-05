@@ -7,8 +7,9 @@ import {
 } from '@src/types/ChatTypes';
 import { getHHMMFromUTC } from '@src/utils/dateUtils';
 import { darkMapStyle } from '@src/utils/mapUtils';
+// @ts-ignore
 import CachedImage from 'expo-cached-image';
-import { Text, View, useColorModeValue } from 'native-base';
+import { Pressable, Text, View, useColorModeValue } from 'native-base';
 import React from 'react';
 import { ActivityIndicator, Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
@@ -17,11 +18,12 @@ import Animated, { BounceInLeft, BounceInRight } from 'react-native-reanimated';
 type Props = {
     isMe: boolean;
     item: Message;
+    goToMessageDetail: (message: Message) => void;
 };
 
 const CustomAnimatedView = Animated.createAnimatedComponent(View);
 
-export const RenderMessage = ({ item, isMe }: Props) => {
+export const RenderMessage = ({ item, isMe, goToMessageDetail }: Props) => {
     const isDark = useColorModeValue(false, true);
     if (item.type === MessageType.TEXT) {
         const content = item.content as TextContent;
@@ -55,48 +57,50 @@ export const RenderMessage = ({ item, isMe }: Props) => {
     } else if (item.type === MessageType.IMAGE) {
         const content = item.content as ImageContent;
         return (
-            <CustomAnimatedView
-                entering={isMe ? BounceInRight : BounceInLeft}
-                p={0.5}
-                bg={isMe ? 'blue.500' : isDark ? 'gray.700' : 'gray.200'}
-                borderRadius="lg"
-            >
-                <CachedImage
-                    source={{
-                        uri: `${content.uri}`,
-                        expiresIn: 60 * 60 * 24 * 7,
-                    }}
-                    cacheKey={`${item.id}-thumb`}
-                    placeholderContent={
-                        <ActivityIndicator
-                            color="blue"
-                            size="small"
-                            style={{
-                                flex: 1,
-                                justifyContent: 'center',
-                            }}
-                        />
-                    }
-                    resizeMode="cover"
-                    style={{
-                        width: Dimensions.get('window').width * 0.6,
-                        height: Dimensions.get('window').width * 0.6,
-                        borderRadius: 5,
-                    }}
-                />
-                <Text
-                    position="absolute"
-                    bottom="0"
-                    right="0"
-                    pr={2}
-                    pb={1}
-                    fontSize="xs"
-                    shadow="2"
-                    fontWeight="light"
+            <Pressable onPress={() => goToMessageDetail(item)}>
+                <CustomAnimatedView
+                    entering={isMe ? BounceInRight : BounceInLeft}
+                    p={0.5}
+                    bg={isMe ? 'blue.500' : isDark ? 'gray.700' : 'gray.200'}
+                    borderRadius="lg"
                 >
-                    {getHHMMFromUTC(item.createdAt)}
-                </Text>
-            </CustomAnimatedView>
+                    <CachedImage
+                        source={{
+                            uri: `${content.uri}`,
+                            expiresIn: 60 * 60 * 24 * 7,
+                        }}
+                        cacheKey={`${item.id}-thumb`}
+                        placeholderContent={
+                            <ActivityIndicator
+                                color="blue"
+                                size="small"
+                                style={{
+                                    flex: 1,
+                                    justifyContent: 'center',
+                                }}
+                            />
+                        }
+                        resizeMode="cover"
+                        style={{
+                            width: Dimensions.get('window').width * 0.6,
+                            height: Dimensions.get('window').width * 0.6,
+                            borderRadius: 5,
+                        }}
+                    />
+                    <Text
+                        position="absolute"
+                        bottom="0"
+                        right="0"
+                        pr={2}
+                        pb={1}
+                        fontSize="xs"
+                        shadow="2"
+                        fontWeight="light"
+                    >
+                        {getHHMMFromUTC(item.createdAt)}
+                    </Text>
+                </CustomAnimatedView>
+            </Pressable>
         );
     } else if (item.type === MessageType.LOCATION) {
         const content = item.content as LocationContent;
@@ -122,8 +126,12 @@ export const RenderMessage = ({ item, isMe }: Props) => {
                         latitudeDelta: 0.004,
                         longitudeDelta: 0.002,
                     }}
+                    onPress={() => goToMessageDetail(item)}
+                    onDoublePress={() => goToMessageDetail(item)}
                     zoomEnabled={false}
                     scrollEnabled={false}
+                    pitchEnabled={false}
+                    rotateEnabled={false}
                     cacheEnabled
                 >
                     <Marker

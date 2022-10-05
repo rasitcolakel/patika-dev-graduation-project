@@ -2,12 +2,10 @@ import {
     Chat,
     ChatType,
     ContentType,
-    LocationContent,
     Message,
     MessageType,
 } from '@src/types/ChatTypes';
 import {
-    Timestamp,
     collection,
     doc,
     getDocs,
@@ -66,10 +64,6 @@ export const getChats = async () => {
     } catch (error) {
         console.log('error', error);
     }
-};
-
-const isLocationType = (message: Message) => {
-    return message.type === MessageType.LOCATION;
 };
 
 export const sendMessage = async (

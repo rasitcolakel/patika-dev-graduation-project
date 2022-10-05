@@ -3,11 +3,8 @@ import { useAppSelector } from '@src/store';
 import { ImageContent, LocationContent, Message } from '@src/types/ChatTypes';
 import { ChatScreenStackParamList } from '@src/types/NavigationTypes';
 import { darkMapStyle } from '@src/utils/mapUtils';
-// @ts-ignore
-import CachedImage from 'expo-cached-image';
 import {
     Avatar,
-    HStack,
     Image,
     Text,
     VStack,

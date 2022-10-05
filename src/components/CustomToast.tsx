@@ -1,5 +1,5 @@
 import { AntDesign } from '@expo/vector-icons';
-import { clearToast, setToast } from '@src/features/uiSlice';
+import { clearToast } from '@src/features/uiSlice';
 import { useAppDispatch, useAppSelector } from '@store/index';
 import { Box, Text, View, useToast } from 'native-base';
 import React, { useEffect } from 'react';

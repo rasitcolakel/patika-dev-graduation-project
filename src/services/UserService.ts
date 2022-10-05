@@ -252,3 +252,18 @@ export const setUserStatus = async (isOnline: boolean): Promise<void> => {
         console.log(error);
     }
 };
+
+export const setUserPushToken = async (pushToken: string): Promise<void> => {
+    try {
+        const user = auth.currentUser;
+        if (user) {
+            const userDoc = doc(db, 'users', user.uid);
+            const response = await updateDoc(userDoc, {
+                pushToken,
+            });
+            return response;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};

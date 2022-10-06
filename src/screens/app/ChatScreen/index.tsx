@@ -5,6 +5,7 @@ import {
     createChatAction,
     handleCurrentChatChangeAction,
 } from '@src/features/chatsSlice';
+import { readMessages } from '@src/services/ChatService';
 import { db } from '@src/services/FirebaseService';
 import { useAppDispatch, useAppSelector } from '@src/store';
 import { Message } from '@src/types/ChatTypes';
@@ -17,6 +18,7 @@ import {
     onSnapshot,
     orderBy,
     query,
+    where,
 } from 'firebase/firestore';
 import { Avatar, FlatList, Text, View } from 'native-base';
 import React, { useEffect, useLayoutEffect } from 'react';
@@ -109,16 +111,21 @@ const ChatScreen = ({ navigation, route }: Props) => {
                 currentChat?.id,
                 'messages',
             );
-            const q = query(chatsRef, orderBy('createdAt', 'asc'));
+            const q = query(
+                chatsRef,
+                where('createdAt', '>', chatMessages?.lastMessageTime || 0),
+                orderBy('createdAt', 'asc'),
+            );
             const unsubscribe = onSnapshot(q, (snapshot) => {
-                snapshot.docChanges().forEach((change) => {
-                    dispatch(handleCurrentChatChangeAction(change));
+                snapshot.docChanges().forEach(async (change) => {
+                    await dispatch(handleCurrentChatChangeAction(change));
+                    await readMessages(currentChat?.id);
                 });
             });
 
-            return unsubscribe;
+            return () => unsubscribe();
         }
-    }, [currentChat]);
+    }, [currentChat, chatMessages?.lastMessageTime]);
 
     useEffect(() => {
         if (route.params.user.id) {

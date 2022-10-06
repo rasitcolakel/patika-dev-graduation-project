@@ -9,7 +9,15 @@ import { getHHMMFromUTC } from '@src/utils/dateUtils';
 import { darkMapStyle } from '@src/utils/mapUtils';
 // @ts-ignore
 import CachedImage from 'expo-cached-image';
-import { Pressable, Text, View, useColorModeValue } from 'native-base';
+import { MaterialCommunityIcons } from 'expo-vector-icons';
+import {
+    HStack,
+    Icon,
+    Pressable,
+    Text,
+    View,
+    useColorModeValue,
+} from 'native-base';
 import React from 'react';
 import { ActivityIndicator, Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
@@ -29,11 +37,15 @@ export const RenderMessage = ({ item, isMe, goToMessageDetail }: Props) => {
         const content = item.content as TextContent;
         return (
             <CustomAnimatedView
-                entering={isMe ? BounceInRight : BounceInLeft}
+                {...(item.isSeen
+                    ? {}
+                    : {
+                          entering: isMe ? BounceInRight : BounceInLeft,
+                      })}
                 bg={isMe ? 'blue.500' : isDark ? 'gray.700' : 'gray.200'}
                 borderRadius="lg"
                 maxWidth="60%"
-                minWidth="15%"
+                minWidth="25%"
             >
                 <Text
                     px="2"
@@ -42,16 +54,44 @@ export const RenderMessage = ({ item, isMe, goToMessageDetail }: Props) => {
                 >
                     {content.text}
                 </Text>
-                <Text
-                    fontSize={10}
-                    color={isMe ? 'white' : isDark ? 'gray.100' : 'gray.800'}
+                <HStack
                     alignSelf="flex-end"
-                    pr={1}
-                    pb={0.5}
-                    opacity={0.8}
+                    pr={2}
+                    alignItems="center"
+                    pb={1}
+                    pt={1}
                 >
-                    {getHHMMFromUTC(item.createdAt)}
-                </Text>
+                    <Text
+                        fontSize={10}
+                        color={
+                            isMe ? 'white' : isDark ? 'gray.100' : 'gray.800'
+                        }
+                        pr={1}
+                        pb={0.5}
+                        opacity={0.8}
+                    >
+                        {getHHMMFromUTC(item.createdAt)}
+                    </Text>
+
+                    {isMe && (
+                        <Icon
+                            as={MaterialCommunityIcons}
+                            name={item.isSeen ? 'check-all' : 'check'}
+                            size="sm"
+                            color={
+                                isMe
+                                    ? 'white'
+                                    : isDark
+                                    ? 'gray.100'
+                                    : 'gray.800'
+                            }
+                            alignSelf="flex-end"
+                            pr={1}
+                            pb={0.5}
+                            opacity={0.8}
+                        />
+                    )}
+                </HStack>
             </CustomAnimatedView>
         );
     } else if (item.type === MessageType.IMAGE) {
@@ -59,7 +99,11 @@ export const RenderMessage = ({ item, isMe, goToMessageDetail }: Props) => {
         return (
             <Pressable onPress={() => goToMessageDetail(item)}>
                 <CustomAnimatedView
-                    entering={isMe ? BounceInRight : BounceInLeft}
+                    {...(item.isSeen
+                        ? {}
+                        : {
+                              entering: isMe ? BounceInRight : BounceInLeft,
+                          })}
                     p={0.5}
                     bg={isMe ? 'blue.500' : isDark ? 'gray.700' : 'gray.200'}
                     borderRadius="lg"
@@ -87,18 +131,49 @@ export const RenderMessage = ({ item, isMe, goToMessageDetail }: Props) => {
                             borderRadius: 5,
                         }}
                     />
-                    <Text
+                    <HStack
+                        alignSelf="flex-end"
+                        pr={2}
+                        alignItems="center"
+                        pb={1}
+                        pt={1}
                         position="absolute"
                         bottom="0"
                         right="0"
-                        pr={2}
-                        pb={1}
-                        fontSize="xs"
-                        shadow="2"
-                        fontWeight="light"
                     >
-                        {getHHMMFromUTC(item.createdAt)}
-                    </Text>
+                        <Text
+                            fontSize={10}
+                            color={
+                                isMe
+                                    ? 'white'
+                                    : isDark
+                                    ? 'gray.100'
+                                    : 'gray.800'
+                            }
+                            pr={1}
+                            opacity={0.8}
+                            fontWeight="light"
+                        >
+                            {getHHMMFromUTC(item.createdAt)}
+                        </Text>
+                        {isMe && (
+                            <Icon
+                                as={MaterialCommunityIcons}
+                                name={item.isSeen ? 'check-all' : 'check'}
+                                size="sm"
+                                color={
+                                    isMe
+                                        ? 'white'
+                                        : isDark
+                                        ? 'gray.100'
+                                        : 'gray.800'
+                                }
+                                alignSelf="flex-end"
+                                pr={1}
+                                opacity={0.8}
+                            />
+                        )}
+                    </HStack>
                 </CustomAnimatedView>
             </Pressable>
         );
@@ -106,7 +181,11 @@ export const RenderMessage = ({ item, isMe, goToMessageDetail }: Props) => {
         const content = item.content as LocationContent;
         return (
             <CustomAnimatedView
-                entering={isMe ? BounceInRight : BounceInLeft}
+                {...(item.isSeen
+                    ? {}
+                    : {
+                          entering: isMe ? BounceInRight : BounceInLeft,
+                      })}
                 h={Dimensions.get('window').height / 5}
                 width="3/4"
                 bg={isMe ? 'blue.500' : isDark ? 'gray.700' : 'gray.200'}
@@ -141,18 +220,30 @@ export const RenderMessage = ({ item, isMe, goToMessageDetail }: Props) => {
                         }}
                     />
                 </MapView>
-                <Text
+                <HStack
+                    alignSelf="flex-end"
+                    pr={2}
+                    alignItems="center"
+                    pb={1}
+                    pt={1}
                     position="absolute"
                     bottom="0"
                     right="0"
-                    pr={2}
-                    pb={1}
-                    fontSize="xs"
-                    shadow="2"
-                    fontWeight="light"
                 >
-                    {getHHMMFromUTC(item.createdAt)}
-                </Text>
+                    <Text fontSize={10} pr={1} opacity={0.8} fontWeight="light">
+                        {getHHMMFromUTC(item.createdAt)}
+                    </Text>
+                    {isMe && (
+                        <Icon
+                            as={MaterialCommunityIcons}
+                            name={item.isSeen ? 'check-all' : 'check'}
+                            size="sm"
+                            alignSelf="flex-end"
+                            pr={1}
+                            opacity={0.8}
+                        />
+                    )}
+                </HStack>
             </CustomAnimatedView>
         );
     }

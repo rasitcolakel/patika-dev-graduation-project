@@ -9,6 +9,7 @@ export type ChatsState = {
 
 export type ChatMessages = {
     chatId: string;
+    lastMessageTime: number;
     messages: Message[];
 };
 
@@ -25,6 +26,7 @@ export type Chat = {
     messages: Message[];
     doesConversationStarted: boolean;
     lastMessage: Message | undefined;
+    unSeenMessagesCount: number;
 };
 
 export enum ChatType {
@@ -37,6 +39,7 @@ export type Message = {
     senderId: string;
     type: MessageType;
     createdAt: number;
+    isSeen: boolean;
 };
 
 export enum MessageType {

@@ -16,6 +16,7 @@ import {
     Pressable,
     Text,
     VStack,
+    View,
     useColorModeValue,
 } from 'native-base';
 import React, { useEffect } from 'react';
@@ -104,14 +105,28 @@ const ChatLists = ({ goToChat }: Props) => {
         }
     };
 
+    const renderUnSeenMessagesCount = (count: number) => {
+        return (
+            <View
+                w={6}
+                h={6}
+                bg="primary.500"
+                borderRadius="full"
+                alignItems="center"
+                justifyContent="center"
+            >
+                <Text color="white">{count > 9 ? '9+' : count}</Text>
+            </View>
+        );
+    };
     const renderItem = ({ item }: { item: Chat }) => {
         const recevier = item.members.find((m) => m.id !== user?.id);
         return (
             <Pressable onPress={() => recevier && goToChat(recevier)}>
-                <HStack alignItems="center" w="full" px={2}>
+                <HStack alignItems="center" w="full" px={2} py={1}>
                     <Avatar
                         bg={randomColorFromID(item.id) + '.500'}
-                        mr="1"
+                        mr="3"
                         source={{
                             uri: recevier?.photoURL,
                         }}
@@ -126,11 +141,25 @@ const ChatLists = ({ goToChat }: Props) => {
                         {item.lastMessage &&
                             renderLastMessage(item.lastMessage)}
                     </VStack>
-                    {item.lastMessage && (
-                        <Text alignSelf="flex-start" opacity={0.6}>
-                            {getHHMMFromUTC(item.lastMessage.createdAt)}
-                        </Text>
-                    )}
+                    <VStack justifyContent="center" alignItems="center">
+                        {item.lastMessage && (
+                            <Text
+                                alignSelf="flex-start"
+                                opacity={0.6}
+                                {...{
+                                    color:
+                                        item.unSeenMessagesCount > 0
+                                            ? 'primary.500'
+                                            : 'text.500',
+                                    bold: item.unSeenMessagesCount > 0,
+                                }}
+                            >
+                                {getHHMMFromUTC(item.lastMessage.createdAt)}
+                            </Text>
+                        )}
+                        {item.unSeenMessagesCount > 0 &&
+                            renderUnSeenMessagesCount(item.unSeenMessagesCount)}
+                    </VStack>
                 </HStack>
             </Pressable>
         );

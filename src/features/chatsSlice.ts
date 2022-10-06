@@ -27,8 +27,11 @@ export const createChatAction = createAsyncThunk(
             );
         });
         let chatId = findChat?.id;
-        if (!findChat) {
+        if (!findChat?.id) {
             chatId = await ChatService.createChat(userId);
+        }
+        if (chatId) {
+            await ChatService.readMessages(chatId);
         }
         return chatId;
     },
@@ -43,13 +46,23 @@ export const handleChatChangeAction = createAsyncThunk(
             const checkIsAdded = _.find(state.chats.data, (chat) => {
                 return chat.id === change.doc.id;
             });
-            if (!checkIsAdded) {
-                const getChatMembersDetails = await UserService.getUsersByIds(
-                    change.doc.data().members,
+            const getChatMembersDetails = await UserService.getUsersByIds(
+                change.doc.data().members,
+            );
+            const chat = change.doc.data() as Chat;
+            chat.unSeenMessagesCount =
+                (await ChatService.getunSeenMessagesCount(chat.id)) || 0;
+            if (checkIsAdded) {
+                dispatch(
+                    updateChat({
+                        ...chat,
+                        members: getChatMembersDetails,
+                    }),
                 );
+            } else {
                 dispatch(
                     addChat({
-                        ...change.doc.data(),
+                        ...chat,
                         members: getChatMembersDetails,
                     }),
                 );
@@ -59,9 +72,12 @@ export const handleChatChangeAction = createAsyncThunk(
                 return chat.id === change.doc.id;
             });
             if (checkIsAdded) {
+                const chat = change.doc.data() as Chat;
+                chat.unSeenMessagesCount =
+                    (await ChatService.getunSeenMessagesCount(chat.id)) || 0;
                 dispatch(
                     updateChat({
-                        ...change.doc.data(),
+                        ...chat,
                         members: checkIsAdded?.members,
                     }),
                 );
@@ -78,6 +94,8 @@ export const handleCurrentChatChangeAction = createAsyncThunk(
         console.log('changeCurrentChat', change.type, change.doc.data());
         if (change.type === 'added') {
             dispatch(addMessageToChat(change.doc.data()));
+        } else if (change.type === 'modified') {
+            dispatch(updateMessageOnChat(change.doc.data()));
         }
     },
 );
@@ -133,12 +151,51 @@ export const chatsSlice = createSlice({
                 console.log('checkIsAdded', checkIsAdded, action.payload.id);
                 if (!checkIsAdded) {
                     findChatMessage.messages.unshift(action.payload);
+                } else {
+                    findChatMessage.messages = findChatMessage.messages.map(
+                        (message) => {
+                            if (message.id === action.payload.id) {
+                                return action.payload;
+                            }
+                            return message;
+                        },
+                    );
+                }
+                if (action.payload.isSeen) {
+                    findChatMessage.lastMessageTime = action.payload.createdAt;
                 }
             } else {
                 state.chatMessages?.push({
                     chatId: state.currentChat.id,
                     messages: [action.payload],
+                    lastMessageTime: action.payload.isSeen
+                        ? action.payload.createdAt
+                        : 0,
                 });
+            }
+        },
+        updateMessageOnChat: (state, action) => {
+            if (!state.currentChat?.id) {
+                return;
+            }
+            const findChatMessage = _.find(
+                state.chatMessages,
+                (chatMessage) => {
+                    return chatMessage.chatId === state.currentChat?.id;
+                },
+            );
+            if (findChatMessage) {
+                findChatMessage.messages = findChatMessage.messages.map(
+                    (message) => {
+                        if (message.id === action.payload.id) {
+                            return action.payload;
+                        }
+                        return message;
+                    },
+                );
+                if (action.payload.isSeen) {
+                    findChatMessage.lastMessageTime = action.payload.createdAt;
+                }
             }
         },
     },
@@ -164,7 +221,13 @@ export const chatsSlice = createSlice({
     },
 });
 
-export const { setChats, addChat, updateChat, removeChat, addMessageToChat } =
-    chatsSlice.actions;
+export const {
+    setChats,
+    addChat,
+    updateChat,
+    removeChat,
+    addMessageToChat,
+    updateMessageOnChat,
+} = chatsSlice.actions;
 
 export default chatsSlice.reducer;

@@ -118,6 +118,60 @@ const SendMessageView = () => {
         onOpen();
     };
 
+    const onTakePhoto = async () => {
+        if (user && currentChat) {
+            const { status } =
+                await ImagePicker.requestCameraPermissionsAsync();
+            if (status === 'granted') {
+                let imageUri = '';
+                const result = await ImagePicker.launchCameraAsync({
+                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                    quality: 0.4,
+                    allowsEditing: true,
+                    allowsMultipleSelection: false,
+                    aspect: [1, 1],
+                });
+
+                if (!result.cancelled) {
+                    if (result.fileSize && result.fileSize > 50000) {
+                        const resizedImage = await manipulateAsync(
+                            result.uri,
+                            [
+                                {
+                                    resize: {
+                                        width: result.width / 3,
+                                        height: result.height / 3,
+                                    },
+                                },
+                            ],
+                            { compress: 0.5 },
+                        );
+                        imageUri = resizedImage.uri;
+                    } else {
+                        imageUri = result.uri;
+                    }
+                    const uploadedImage = await uploadImage(imageUri);
+                    sendMessage(
+                        currentChat.id,
+                        {
+                            uri: uploadedImage,
+                        },
+                        MessageType.IMAGE,
+                    );
+                }
+                onClose();
+            } else {
+                dispatch(
+                    setToast({
+                        title: 'Permission Denied',
+                        message: 'Permission to access camera was denied',
+                        variant: 'error',
+                    }),
+                );
+            }
+        }
+    };
+
     return (
         <HStack
             bg={useColorModeValue(theme.colors.white, theme.colors.black)}
@@ -139,7 +193,7 @@ const SendMessageView = () => {
             />
             <Actionsheet isOpen={isOpen} onClose={onClose}>
                 <Actionsheet.Content>
-                    <Actionsheet.Item p={2}>
+                    <Actionsheet.Item p={2} onPress={onTakePhoto}>
                         <HStack alignItems="center">
                             <Icon
                                 as={MaterialIcons}

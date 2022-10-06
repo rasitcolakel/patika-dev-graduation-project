@@ -82,10 +82,10 @@ const ContactsList = ({ goToChat }: Props) => {
                     )}
                 >
                     <Pressable onPress={() => goToChat(item)}>
-                        <HStack alignItems="center" w="full" px={2}>
+                        <HStack alignItems="center" w="full" px={2} py={1}>
                             <Avatar
                                 bg={randomColorFromID(item.id) + '.500'}
-                                mr="1"
+                                mr="3"
                                 source={{
                                     uri: item.photoURL,
                                 }}

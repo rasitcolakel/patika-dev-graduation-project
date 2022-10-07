@@ -10,17 +10,15 @@ import {
 import { EditProfileForm } from '@src/types/UserTypes';
 import { manipulateAsync } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
-import { AntDesign, Ionicons } from 'expo-vector-icons';
+import { AntDesign } from 'expo-vector-icons';
 import {
     Avatar,
     Button,
-    Center,
     Icon,
     IconButton,
     Input,
     KeyboardAvoidingView,
     Spinner,
-    Text,
     View,
 } from 'native-base';
 import React from 'react';

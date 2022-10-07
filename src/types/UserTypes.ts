@@ -33,7 +33,9 @@ export type FilteredContact = UserType & {
 
 export type ContactsState = {
     data: Contacts;
+    filteredData: Contacts;
     loading: boolean;
+    filter: string;
     addContact: {
         loading: boolean;
         data: Contacts;

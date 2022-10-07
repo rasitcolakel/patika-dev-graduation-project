@@ -1,6 +1,6 @@
 import {
     addContactAction,
-    filterContacts,
+    filterAddContactsData,
     removeContactAction,
     searchContactsAction,
 } from '@features/contactsSlice';
@@ -33,7 +33,7 @@ const AddContactList = () => {
     }, []);
 
     const onSearch = (search: string) => {
-        dispatch(filterContacts(search));
+        dispatch(filterAddContactsData(search));
     };
 
     const add = (id: string) => {

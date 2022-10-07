@@ -8,7 +8,9 @@ import _ from 'lodash';
 
 const initialState: ContactsState = {
     data: [],
+    filteredData: [],
     loading: false,
+    filter: '',
     addContact: {
         loading: false,
         data: [],
@@ -81,7 +83,25 @@ export const contactsSlice = createSlice({
     name: 'contacts',
     initialState,
     reducers: {
-        filterContacts: (state, action) => {
+        filterContactsData: (state, action) => {
+            state.filteredData = _.map(state.data, (contact) => {
+                return {
+                    ...contact,
+                    isContact: !!_.find(state.data, { id: contact.id }),
+                    loading: false,
+                };
+            }).filter((contact) => {
+                return (
+                    contact.firstName
+                        .toLocaleLowerCase()
+                        .includes(action.payload.toLocaleLowerCase()) ||
+                    contact.lastName
+                        .toLocaleLowerCase()
+                        .includes(action.payload.toLocaleLowerCase())
+                );
+            });
+        },
+        filterAddContactsData: (state, action) => {
             state.addContact.filter = action.payload;
             state.addContact.filteredData = _.map(
                 state.addContact.data,
@@ -119,6 +139,7 @@ export const contactsSlice = createSlice({
         builder.addCase(getContactsAction.fulfilled, (state, action) => {
             if (action.payload) {
                 state.data = action.payload;
+                state.filteredData = action.payload;
                 state.loading = false;
             }
         });
@@ -183,7 +204,11 @@ export const contactsSlice = createSlice({
     },
 });
 
-export const { filterContacts, addContact, removeContact } =
-    contactsSlice.actions;
+export const {
+    filterContactsData,
+    filterAddContactsData,
+    addContact,
+    removeContact,
+} = contactsSlice.actions;
 
 export default contactsSlice.reducer;

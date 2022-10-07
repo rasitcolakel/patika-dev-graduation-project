@@ -1,5 +1,4 @@
 import { getContactsAction } from '@features/contactsSlice';
-import { useNavigation } from '@react-navigation/native';
 import { Chat, Message, TextContent } from '@src/types/ChatTypes';
 import { UserType } from '@src/types/UserTypes';
 import { getHHMMFromUTC } from '@src/utils/dateUtils';
@@ -23,10 +22,10 @@ import React, { useEffect } from 'react';
 
 type Props = {
     goToChat: (user: UserType) => void;
+    openAddChat: () => void;
 };
 
-const ChatLists = ({ goToChat }: Props) => {
-    const navigation = useNavigation<any>();
+const ChatLists = ({ goToChat, openAddChat }: Props) => {
     const user = useAppSelector((state) => state.auth.user);
     const chats = useAppSelector((state) => state.chats.data);
     const userContacts = useAppSelector((state) => state.auth.user?.contacts);
@@ -45,18 +44,15 @@ const ChatLists = ({ goToChat }: Props) => {
             <Center flex="1" mx={2}>
                 <Icon
                     as={MaterialIcons}
-                    name="contacts"
+                    name="message"
                     size="140"
                     color="primary.500"
                 />
                 <Text textAlign="center" my={5} bold={false} fontSize="xl">
-                    You don't have any contacts yet. Add some!
+                    You don't have any chats yet. Add some!
                 </Text>
-                <Button
-                    colorScheme="primary"
-                    onPress={() => navigation.push('AddContact')}
-                >
-                    Add a Contact
+                <Button colorScheme="primary" onPress={openAddChat}>
+                    Add a Chat
                 </Button>
             </Center>
         );
@@ -146,6 +142,7 @@ const ChatLists = ({ goToChat }: Props) => {
                             <Text
                                 alignSelf="flex-start"
                                 opacity={0.6}
+                                flex="1"
                                 {...{
                                     color:
                                         item.unSeenMessagesCount > 0

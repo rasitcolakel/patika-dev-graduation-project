@@ -4,6 +4,7 @@ import { uiSlice } from '@features/uiSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { chatsSlice } from '@src/features/chatsSlice';
+import { storiesSlice } from '@src/features/storiesSlice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import {
     FLUSH,
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
     contacts: contactsSlice.reducer,
     ui: uiSlice.reducer,
     chats: chatsSlice.reducer,
+    stories: storiesSlice.reducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackScreenProps } from '@react-navigation/stack';
 import Chats from '@screens/app/Chats';
-import Settings from '@screens/app/Settings';
 import { getUserById } from '@src/services/UserService';
 import {
     AppStackParamList,
@@ -12,6 +11,7 @@ import { MaterialIcons } from 'expo-vector-icons';
 import { useEffect, useRef } from 'react';
 
 import ContactsStack from './ContactsStack';
+import SettingsStack from './SettingsStack';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -95,8 +95,8 @@ const BottomTabs = ({ navigation }: Props) => {
                 }}
             />
             <Tab.Screen
-                name="Settings"
-                component={Settings}
+                name="SettingsStack"
+                component={SettingsStack}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <MaterialIcons
@@ -105,6 +105,8 @@ const BottomTabs = ({ navigation }: Props) => {
                             size={size}
                         />
                     ),
+                    headerShown: false,
+                    title: 'Settings',
                 }}
             />
         </Tab.Navigator>

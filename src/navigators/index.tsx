@@ -6,7 +6,7 @@ import { UserType } from '@src/types/UserTypes';
 import { useAppDispatch, useAppSelector } from '@store/index';
 import * as SecureStore from 'expo-secure-store';
 import { StatusBar } from 'expo-status-bar';
-import { useColorModeValue, useTheme } from 'native-base';
+import { useColorMode, useColorModeValue, useTheme } from 'native-base';
 import React, { useEffect } from 'react';
 
 import AppStack from './App';
@@ -14,6 +14,7 @@ import AuthStack from './Auth';
 
 const Navigation = () => {
     const theme = useTheme();
+    const { colorMode, toggleColorMode } = useColorMode();
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.auth.user);
     const MyTheme = {
@@ -51,9 +52,27 @@ const Navigation = () => {
             }
         });
     };
+
+    const initTheme = async () => {
+        const localTheme = await SecureStore.getItemAsync('theme');
+        if (localTheme) {
+            const theme = JSON.parse(localTheme);
+            console.log('theme', theme);
+            if (theme !== colorMode) {
+                toggleColorMode();
+            }
+        }
+    };
+
     useEffect(() => {
+        initTheme();
         initUser();
     }, []);
+
+    useEffect(() => {
+        SecureStore.setItemAsync('theme', JSON.stringify(colorMode));
+    }, [colorMode]);
+
     return (
         <>
             <CustomToast />

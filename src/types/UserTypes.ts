@@ -13,6 +13,7 @@ export type RegisterForm = {
 
 export type AuthState = {
     user: undefined | UserType;
+    loading: boolean;
 };
 
 export type UserType = {
@@ -47,4 +48,10 @@ export type ContactsState = {
 export type SwipeableState = {
     isOpen: boolean;
     children: React.ReactNode | null;
+};
+
+export type EditProfileForm = {
+    photoURL: string;
+    firstName: string;
+    lastName: string;
 };

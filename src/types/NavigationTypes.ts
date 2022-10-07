@@ -17,7 +17,7 @@ export type AppStackParamList = {
 export type BottomTabsParamList = {
     Chats: undefined;
     ContactsStack: ContactsStackParamList;
-    Settings: undefined;
+    SettingsStack: NavigatorScreenParams<SettingsStackParamList>;
 };
 
 export type ContactsStackParamList = {
@@ -28,4 +28,10 @@ export type ContactsStackParamList = {
 export type ChatScreenStackParamList = {
     ChatScreen: { user: UserType };
     MessageDetail: { message: Message; user: UserType };
+};
+
+export type SettingsStackParamList = {
+    Settings: undefined;
+    EditProfile: undefined;
+    ChangePassword: undefined;
 };

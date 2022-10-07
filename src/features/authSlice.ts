@@ -4,7 +4,9 @@ import {
     createSlice,
     isAnyOf,
 } from '@reduxjs/toolkit';
+import * as ImageService from '@services/ImageService';
 import * as UserService from '@services/UserService';
+import { RootState } from '@src/store';
 import {
     AuthState,
     LoginForm,
@@ -17,6 +19,7 @@ import { getContactsAction } from './contactsSlice';
 
 const initialState: AuthState = {
     user: undefined,
+    loading: false,
 };
 
 export const loginAction = createAsyncThunk(
@@ -59,6 +62,48 @@ export const logoutAction = createAsyncThunk('auth/logout', async () => {
     await SecureStore.deleteItemAsync('user');
 });
 
+export const updateMyProfile = createAsyncThunk(
+    'auth/updateMyProfile',
+    async (payload: Partial<UserType>, { dispatch, getState }) => {
+        try {
+            const state = getState() as RootState;
+            const user = state.auth.user;
+            const values = {
+                ...payload,
+            };
+            if (payload.photoURL) {
+                if (user?.photoURL && user?.photoURL === payload.photoURL) {
+                    delete values.photoURL;
+                } else {
+                    values.photoURL = await ImageService.uploadImage(
+                        payload.photoURL,
+                    );
+                }
+            }
+
+            await UserService.updateMyProfile(payload);
+            await dispatch(fetchMyProfileAction());
+        } catch (error) {
+            console.log('error', error);
+            throw error;
+        }
+    },
+);
+
+export const fetchMyProfileAction = createAsyncThunk(
+    'auth/fetchMyProfile',
+    async (params, { dispatch }) => {
+        try {
+            const user = await UserService.getMyProfile();
+            await SecureStore.setItemAsync('user', JSON.stringify(user));
+            return user;
+        } catch (error) {
+            console.log('error', error);
+            throw error;
+        }
+    },
+);
+
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -73,18 +118,45 @@ export const authSlice = createSlice({
         });
         builder.addMatcher(
             isAnyOf(
+                loginAction.pending,
+                registerAction.pending,
+                getMyProfileAction.pending,
+                fetchMyProfileAction.pending,
+                updateMyProfile.pending,
+            ),
+            (state) => {
+                state.loading = true;
+            },
+        );
+        builder.addMatcher(
+            isAnyOf(
                 // loginAction.fulfilled,
                 // registerAction.fulfilled,
                 getMyProfileAction.fulfilled,
+                fetchMyProfileAction.fulfilled,
             ),
             (state, action: PayloadAction<UserType | undefined>) => {
+                state.loading = false;
                 state.user = action.payload;
             },
         );
         builder.addMatcher(
-            isAnyOf(loginAction.rejected, registerAction.rejected),
+            isAnyOf(loginAction.fulfilled, registerAction.fulfilled),
+            (state) => {
+                state.loading = false;
+            },
+        );
+        builder.addMatcher(
+            isAnyOf(
+                loginAction.rejected,
+                registerAction.rejected,
+                getMyProfileAction.rejected,
+                fetchMyProfileAction.rejected,
+                updateMyProfile.rejected,
+            ),
             (state) => {
                 state.user = undefined;
+                state.loading = false;
             },
         );
     },

@@ -267,3 +267,18 @@ export const setUserPushToken = async (pushToken: string): Promise<void> => {
         console.log(error);
     }
 };
+
+export const updateMyProfile = async (
+    data: Partial<UserType>,
+): Promise<void> => {
+    try {
+        const user = auth.currentUser;
+        if (user) {
+            const userDoc = doc(db, 'users', user.uid);
+            const response = await updateDoc(userDoc, data);
+            return response;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};

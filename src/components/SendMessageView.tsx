@@ -187,7 +187,7 @@ const SendMessageView = () => {
             <IconButton
                 _icon={{
                     as: MaterialIcons,
-                    name: 'add',
+                    name: 'attach-file',
                 }}
                 onPress={onActionSheetOpen}
             />

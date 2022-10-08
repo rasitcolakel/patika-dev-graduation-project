@@ -1,8 +1,8 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import * as ImageService from '@src/services/ImageService';
 import * as StoriesService from '@src/services/StoriesService';
 import * as UserService from '@src/services/UserService';
-import { StoriesState } from '@src/types/StoryTypes';
+import { PlayStories, StoriesState } from '@src/types/StoryTypes';
 import { DocumentChange, DocumentData } from 'firebase/firestore';
 import _ from 'lodash';
 
@@ -11,6 +11,12 @@ const initialState: StoriesState = {
     mine: [],
     loading: false,
     storyModal: false,
+    playStories: {
+        visible: false,
+        index: 0,
+        storyIndex: 0,
+        type: 'mine',
+    },
 };
 
 type ShareStoryActionProps = {
@@ -72,7 +78,7 @@ export const handleStoryChangeAction = createAsyncThunk(
 );
 
 export const storiesSlice = createSlice({
-    name: 'ui',
+    name: 'stories',
     initialState,
     reducers: {
         openStoryModal: (state) => {
@@ -80,6 +86,12 @@ export const storiesSlice = createSlice({
         },
         closeStoryModal: (state) => {
             state.storyModal = false;
+        },
+        openPlayStories: (state, action: PayloadAction<PlayStories>) => {
+            state.playStories = action.payload;
+        },
+        closePlayStories: (state) => {
+            state.playStories = initialState.playStories;
         },
         addMineStory: (state, action) => {
             const checkIsAdded = _.find(state.mine, (story) => {
@@ -177,6 +189,8 @@ export const {
     addStory,
     updateStory,
     removeStory,
+    openPlayStories,
+    closePlayStories,
 } = storiesSlice.actions;
 
 export default storiesSlice.reducer;

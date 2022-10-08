@@ -20,23 +20,19 @@ import {
     useColorModeValue,
 } from 'native-base';
 import React, { useEffect } from 'react';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import StatusCircle from './StatusBorder';
 
-const MyContactsStories = () => {
+type Props = {
+    openStories: (contact: ContactStory) => void;
+};
+
+const MyContactsStories = ({ openStories }: Props) => {
     const isDark = useColorModeValue(false, true);
     const data = useAppSelector((state) => state.stories.data);
     const contacts = useAppSelector((state) => state.contacts.data);
-    // const groupedStories = _.sortBy(
-    //     _.map(
-    //         _.groupBy(data, (story) => story.userId),
-    //         (value, key) => {
-    //             const user = _.find(contacts, { id: key });
-    //             return { user, stories: value };
-    //         },
-    //     ),
-    //     'title',
-    // );
+
     const dispatch = useAppDispatch();
     // listen for my new stories
     useEffect(() => {
@@ -65,32 +61,34 @@ const MyContactsStories = () => {
             }
         }
     }, [contacts]);
-    console.log('data', data);
+
     const renderItem = ({ user, stories }: ContactStory) => {
         return (
-            <HStack alignItems="center">
-                <StatusCircle
-                    width={60}
-                    height={60}
-                    circleProps={{
-                        strokeWidth: 5,
-                    }}
-                    count={stories.length}
-                >
-                    <Avatar
-                        source={{ uri: user?.photoURL }}
-                        style={{
-                            width: 48,
-                            height: 48,
+            <TouchableOpacity onPress={() => openStories({ user, stories })}>
+                <HStack alignItems="center">
+                    <StatusCircle
+                        width={60}
+                        height={60}
+                        circleProps={{
+                            strokeWidth: 5,
                         }}
-                        bottom={-6}
-                        right={-6}
+                        count={stories.length}
                     >
-                        {user?.firstName[0] + ' ' + user?.lastName[0]}
-                    </Avatar>
-                </StatusCircle>
-                <Text ml={2}>{user?.firstName + ' ' + user?.lastName}</Text>
-            </HStack>
+                        <Avatar
+                            source={{ uri: user?.photoURL }}
+                            style={{
+                                width: 48,
+                                height: 48,
+                            }}
+                            bottom={-6}
+                            right={-6}
+                        >
+                            {user?.firstName[0] + ' ' + user?.lastName[0]}
+                        </Avatar>
+                    </StatusCircle>
+                    <Text ml={2}>{user?.firstName + ' ' + user?.lastName}</Text>
+                </HStack>
+            </TouchableOpacity>
         );
     };
     return (

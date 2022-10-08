@@ -10,16 +10,17 @@ import {
     startAt,
     where,
 } from 'firebase/firestore';
-import { Avatar, HStack, IconButton, Text, View } from 'native-base';
+import { Avatar, HStack, IconButton, Pressable, Text, View } from 'native-base';
 import React, { useEffect } from 'react';
 
 import StatusCircle from './StatusBorder';
 
 type Props = {
     openNewStory: () => void;
+    openMine: () => void;
 };
 
-const MyStories = ({ openNewStory }: Props) => {
+const MyStories = ({ openNewStory, openMine }: Props) => {
     const mine = useAppSelector((state) => state.stories.mine);
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
@@ -52,46 +53,50 @@ const MyStories = ({ openNewStory }: Props) => {
     if (!user) return null;
     return (
         <View ml={2}>
-            <HStack alignItems="center">
-                <StatusCircle
-                    width={60}
-                    height={60}
-                    circleProps={{
-                        strokeWidth: 5,
-                    }}
-                    count={mine.length}
-                >
-                    <Avatar
-                        source={{ uri: user?.photoURL }}
-                        style={
-                            mine.length === 0
-                                ? {
-                                      width: 60,
-                                      height: 60,
-                                  }
-                                : {
-                                      width: 48,
-                                      height: 48,
-                                      bottom: -6,
-                                      right: -6,
-                                  }
-                        }
+            <Pressable onPress={openMine}>
+                <HStack alignItems="center">
+                    <StatusCircle
+                        width={60}
+                        height={60}
+                        circleProps={{
+                            strokeWidth: 5,
+                        }}
+                        count={mine.length}
                     >
-                        <Text>{user?.firstName[0] + user?.lastName[0]}</Text>
-                    </Avatar>
-                </StatusCircle>
-                <Text ml={2} flex={1}>
-                    {user?.firstName + ' ' + user?.lastName}
-                </Text>
-                <IconButton
-                    _icon={{
-                        as: MaterialIcons,
-                        name: 'camera-alt',
-                        size: 'xl',
-                    }}
-                    onPress={openNewStory}
-                />
-            </HStack>
+                        <Avatar
+                            source={{ uri: user?.photoURL }}
+                            style={
+                                mine.length === 0
+                                    ? {
+                                          width: 60,
+                                          height: 60,
+                                      }
+                                    : {
+                                          width: 48,
+                                          height: 48,
+                                          bottom: -6,
+                                          right: -6,
+                                      }
+                            }
+                        >
+                            <Text>
+                                {user?.firstName[0] + user?.lastName[0]}
+                            </Text>
+                        </Avatar>
+                    </StatusCircle>
+                    <Text ml={2} flex={1}>
+                        {user?.firstName + ' ' + user?.lastName}
+                    </Text>
+                    <IconButton
+                        _icon={{
+                            as: MaterialIcons,
+                            name: 'camera-alt',
+                            size: 'xl',
+                        }}
+                        onPress={openNewStory}
+                    />
+                </HStack>
+            </Pressable>
         </View>
     );
 };

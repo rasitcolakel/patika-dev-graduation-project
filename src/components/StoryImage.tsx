@@ -1,18 +1,23 @@
+// @ts-ignore
+import CachedImage, { CacheManager } from 'expo-cached-image';
 import { Image } from 'native-base';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image as RNImage } from 'react-native';
+import { ActivityIndicator, Dimensions, Image as RNImage } from 'react-native';
 
 type Props = {
     image: string;
+    cacheId?: string;
 };
 
-const StoryImage = ({ image }: Props) => {
+const StoryImage = ({ image, cacheId }: Props) => {
     const [size, setSize] = useState({
         width: 0,
         height: 0,
     });
-    useEffect(() => {
-        RNImage.getSize(image, (width, height) => {
+
+    const getSize = async () => {
+        const uri = await CacheManager.getCachedUri({ key: cacheId + 'story' });
+        RNImage.getSize(uri && cacheId ? uri : image, (width, height) => {
             const { width: screenWidth } = Dimensions.get('window');
             const ratio = width / height;
             setSize({
@@ -20,11 +25,34 @@ const StoryImage = ({ image }: Props) => {
                 height: screenWidth / ratio,
             });
         });
+    };
+    useEffect(() => {
+        getSize();
     }, [image]);
-
-    return (
+    return cacheId ? (
+        <CachedImage
+            placeholderContent={
+                <ActivityIndicator
+                    color="blue"
+                    size="small"
+                    style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                    }}
+                />
+            }
+            source={{
+                uri: image,
+                expiresIn: 60 * 60 * 24 * 7,
+            }}
+            cacheKey={cacheId + 'story'}
+            resizeMode="cover"
+            style={{
+                ...size,
+            }}
+        />
+    ) : (
         <Image
-            bg="amber.600"
             source={{ uri: image }}
             alt="image"
             width={size.width}

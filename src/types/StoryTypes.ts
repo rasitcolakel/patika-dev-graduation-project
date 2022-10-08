@@ -5,6 +5,14 @@ export type StoriesState = {
     mine: MyStory[];
     loading: boolean;
     storyModal: boolean;
+    playStories: PlayStories;
+};
+
+export type PlayStories = {
+    visible: boolean;
+    index: number;
+    storyIndex: number;
+    type: 'mine' | 'contact';
 };
 
 export type ContactStory = {

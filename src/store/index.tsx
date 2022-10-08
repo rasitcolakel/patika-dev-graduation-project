@@ -26,7 +26,7 @@ const persistConfig = {
 const storiesConfig = {
     key: 'stories',
     storage: AsyncStorage,
-    blacklist: ['storyModal', 'loading', 'mine', 'data'],
+    blacklist: ['storyModal', 'loading', 'mine', 'data', 'playStories'],
 };
 const rootReducer = combineReducers({
     auth: authSlice.reducer,

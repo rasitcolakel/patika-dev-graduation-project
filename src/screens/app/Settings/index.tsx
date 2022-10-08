@@ -31,7 +31,7 @@ const Settings = ({ navigation }: Props) => {
         <View my={3}>
             <HStack mx={4} alignItems="center">
                 <Avatar source={{ uri: user?.photoURL }} size="xl">
-                    {user?.firstName + ' ' + user?.lastName}
+                    {user?.firstName[0] + ' ' + user?.lastName[0]}
                 </Avatar>
                 <Heading ml={2}>
                     {user?.firstName + ' ' + user?.lastName}

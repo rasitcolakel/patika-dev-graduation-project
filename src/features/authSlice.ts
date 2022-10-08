@@ -81,7 +81,7 @@ export const updateMyProfile = createAsyncThunk(
                 }
             }
 
-            await UserService.updateMyProfile(payload);
+            await UserService.updateMyProfile(values);
             await dispatch(fetchMyProfileAction());
         } catch (error) {
             console.log('error', error);

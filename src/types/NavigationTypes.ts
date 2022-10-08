@@ -16,6 +16,7 @@ export type AppStackParamList = {
 
 export type BottomTabsParamList = {
     Chats: undefined;
+    Status: undefined;
     ContactsStack: ContactsStackParamList;
     SettingsStack: NavigatorScreenParams<SettingsStackParamList>;
 };

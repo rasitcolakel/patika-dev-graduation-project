@@ -1,15 +1,20 @@
 import { UserType } from './UserTypes';
 
 export type StoriesState = {
-    data: Story[];
+    data: ContactStory[];
     mine: MyStory[];
     loading: boolean;
+    storyModal: boolean;
+};
+
+export type ContactStory = {
+    user: UserType;
+    stories: Story[];
 };
 
 export type Story = {
     id: string;
     userId: string;
-    user: UserType;
     media: string;
     createdAt: number;
     seen: boolean;

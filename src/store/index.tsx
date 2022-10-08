@@ -21,13 +21,19 @@ import thunk from 'redux-thunk';
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
+    blacklist: ['stories'],
+};
+const storiesConfig = {
+    key: 'stories',
+    storage: AsyncStorage,
+    blacklist: ['storyModal', 'loading', 'mine', 'data'],
 };
 const rootReducer = combineReducers({
     auth: authSlice.reducer,
     contacts: contactsSlice.reducer,
     ui: uiSlice.reducer,
     chats: chatsSlice.reducer,
-    stories: storiesSlice.reducer,
+    stories: persistReducer(storiesConfig, storiesSlice.reducer),
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

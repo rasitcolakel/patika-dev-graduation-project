@@ -206,6 +206,7 @@ export const getUserById = async (
     id: string,
 ): Promise<UserType | undefined> => {
     try {
+        console.log("getting user's profile", id);
         const userDoc = doc(db, 'users', id);
         const docSnap = await getDoc(userDoc);
         if (docSnap.exists()) {

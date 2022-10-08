@@ -29,6 +29,7 @@
     "@reduxjs/toolkit": "^1.8.5",
     "expo": "^46.0.0",
     "expo-cached-image": "^46.0.1",
+    "expo-camera": "~12.3.0",
     "expo-device": "~4.3.0",
     "expo-image-manipulator": "~10.4.0",
     "expo-image-picker": "~13.3.1",

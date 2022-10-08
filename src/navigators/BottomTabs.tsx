@@ -1,13 +1,14 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackScreenProps } from '@react-navigation/stack';
 import Chats from '@screens/app/Chats';
+import Status from '@src/screens/app/Status';
 import { getUserById } from '@src/services/UserService';
 import {
     AppStackParamList,
     BottomTabsParamList,
 } from '@src/types/NavigationTypes';
 import * as Notifications from 'expo-notifications';
-import { MaterialIcons } from 'expo-vector-icons';
+import { FontAwesome, MaterialIcons } from 'expo-vector-icons';
 import { useEffect, useRef } from 'react';
 
 import ContactsStack from './ContactsStack';
@@ -66,6 +67,22 @@ const BottomTabs = ({ navigation }: Props) => {
     }, []);
     return (
         <Tab.Navigator initialRouteName="Chats">
+            <Tab.Screen
+                name="Status"
+                component={Status}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <FontAwesome
+                            position="absolute"
+                            name="circle-o-notch"
+                            color={color}
+                            size={size}
+                        />
+                    ),
+                    headerShown: false,
+                    title: 'Status',
+                }}
+            />
             <Tab.Screen
                 name="ContactsStack"
                 component={ContactsStack}

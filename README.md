@@ -183,6 +183,140 @@ const user = auth.currentUser;
 
 ---
 
+I have used Firebase Firestore to store data in my project. I have used it to store user data, contacts, chats, stories, and messages.
+<br />
+
+<h3> Users Collection </h3>
+<br />
+
+Here is the user data structure:
+
+```typescript
+export interface User {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    photoURL: string;
+    pushToken: string;
+    isOnline: boolean;
+    latSeen: number;
+}
+```
+
+An example of <b>a User</b> in the Firebase Database:
+
+<img src="./screenshots/database/users.png" width="100%"/>
+
+<br />
+
+<h3> Contacts Collection </h3>
+<br />
+
+Here is the contact data structure:
+
+```typescript
+export interface Contact {
+    id: string;
+}
+```
+
+An example of <b>a Contact</b> in the Firebase Database:
+<img src="./screenshots/database/userContacts.png" width="100%"/>
+
+<br />
+
+<h3> Chats Collection </h3>
+<br />
+
+Here is the chat data structure:
+
+```typescript
+export interface Chat {
+    id: string;
+    lastMessage: Message;
+    type: 'oneToOne' | 'group';
+    doesConversationStarted: boolean;
+    members: string[];
+    createdAt: number;
+}
+```
+
+An example of <b>a Chat</b> in the Firebase Database:
+<br />
+<br />
+<img src="./screenshots/database/chats.png" width="100%"/>
+
+<br />
+
+<h3> Messages Collection </h3>
+<br />
+
+Here is the message data structure:
+
+```typescript
+export interface Message {
+    id: string;
+    content: ContentType;
+    senderId: string;
+    createdAt: number;
+    type: 'text' | 'image' | 'location';
+    isSeen: boolean;
+}
+
+export type ContentType = TextContent | ImageContent | LocationContent;
+
+export type TextContent = {
+    text: string;
+};
+
+export type ImageContent = {
+    uri: string;
+};
+
+export type LocationContent = {
+    latitude: number;
+    longitude: number;
+};
+```
+
+An example of <b>a Text Message</b> in the Firebase Database:
+
+<img src="./screenshots/database/chatMessages.png" width="100%"/>
+
+📷 📷 An example of <b>an Image Message</b> in the Firebase Database:
+
+<img src="./screenshots/database/chatMessages2.png" width="100%"/>
+
+📍📍 An example of <b>a Location Message</b> in the Firebase Database:
+
+<img src="./screenshots/database/chatMessages3.png" width="100%"/>
+
+<br />
+
+<h3> Stories Collection </h3>
+<br />
+
+Here is the story data structure:
+
+```typescript
+export interface Story {
+    id: string;
+    userId: string;
+    createdAt: number;
+    updatedAt: number;
+    media: string;
+}
+```
+
+An example of <b>a Story</b> in the Firebase Database:
+
+<img src="./screenshots/database/stories.png" width="100%"/>
+
+---
+
+<h2> CRUD Operations </h2>
+
 ```typescript
 import { db } from '../firebase';
 
@@ -284,7 +418,18 @@ Below, there is an illustration of how I used Firebase Functions in this project
 
 <img src="./screenshots/onMessageCreate.png" width="100%"/>
 
+And the function on the Firebase Dashboard.
+
+<img src="./screenshots/onMessageCreate2.png" width="100%"/>
+
+We can see the logs on Google Cloud Platform.
+
+<img src="./screenshots/onMessageCreate3.png" width="100%"/>
 <br/>
+
+<h2> Configuration of the onMessageCreate Cloud Function </h2>
+
+---
 
 <b> notificationService.ts</b> file under the ./functions/src
 

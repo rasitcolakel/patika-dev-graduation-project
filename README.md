@@ -48,6 +48,17 @@ yarn ios
 
 <h2>Screenshots</h2>
 
+<h3>Contacts Page</h3>
+
+https://user-images.githubusercontent.com/53280610/194757384-a7ff21a1-9143-4732-a6ad-ef2488903852.mov
+
+<h3> Profile and Edit Profile Page</h3>
+
+
+
+https://user-images.githubusercontent.com/53280610/194757409-c2dc7e4e-4ce0-482a-ae39-6fd65ccc8489.mov
+
+
 ---
 
 <h2>Used Technologies</h2>

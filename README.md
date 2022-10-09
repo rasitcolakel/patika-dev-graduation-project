@@ -1,5 +1,5 @@
 <h1>PATIKA REACT NATIVE GRADUATION PROJECT</h1>
-This is a project for Patika.dev React Native Bootcamp. It is a messaging app that uses Firebase for authentication and database.
+This is a project for Patika.dev React Native Bootcamp. It is a messaging app that uses Firebase for authentication, storage, database and cloud functions.
 
 <h2>Required Softwares</h2>
 

@@ -81,6 +81,23 @@ https://user-images.githubusercontent.com/53280610/194760924-a0bea33d-81ae-486b-
 
 https://user-images.githubusercontent.com/53280610/194761241-2af7bbe8-1f53-4d48-a405-0d585f0e48ed.mov
 
+<h3>Taking a Picture</h3>
+
+
+
+https://user-images.githubusercontent.com/53280610/194761544-cad6c2cf-512d-4122-8a56-8c5cbde9fc46.mov
+
+<h3>Seen status of the message sent</h3>
+
+
+
+https://user-images.githubusercontent.com/53280610/194761728-225c53cc-0020-41c3-8301-7e43784e7694.mov
+
+<h3> User Status is online or not </h3>
+
+
+https://user-images.githubusercontent.com/53280610/194761923-1eabd40b-706d-4a73-8076-6c8fb1c43559.mov
+
 
 
 ---

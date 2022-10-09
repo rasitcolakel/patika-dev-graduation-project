@@ -1,10 +1,10 @@
-import { authSlice } from '@features/authSlice';
-import { contactsSlice } from '@features/contactsSlice';
-import { uiSlice } from '@features/uiSlice';
+import { authInitialState, authSlice } from '@features/authSlice';
+import { contactsInitialState, contactsSlice } from '@features/contactsSlice';
+import { uiInitialState, uiSlice } from '@features/uiSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { chatsSlice } from '@src/features/chatsSlice';
-import { storiesSlice } from '@src/features/storiesSlice';
+import { AnyAction, combineReducers, configureStore } from '@reduxjs/toolkit';
+import { chatsInitialState, chatsSlice } from '@src/features/chatsSlice';
+import { storiesInitialState, storiesSlice } from '@src/features/storiesSlice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import {
     FLUSH,
@@ -28,13 +28,35 @@ const storiesConfig = {
     storage: AsyncStorage,
     blacklist: ['storyModal', 'loading', 'mine', 'data', 'playStories'],
 };
-const rootReducer = combineReducers({
+
+const appReducer = combineReducers({
     auth: authSlice.reducer,
     contacts: contactsSlice.reducer,
     ui: uiSlice.reducer,
     chats: chatsSlice.reducer,
     stories: persistReducer(storiesConfig, storiesSlice.reducer),
 });
+
+const rootReducer = (
+    state: ReturnType<typeof appReducer>,
+    action: AnyAction,
+) => {
+    /* if you are using RTK, you can import your action and use it's type property instead of the literal definition of the action  */
+    if (action.type === 'auth/logout/fulfilled') {
+        state = {
+            auth: authInitialState,
+            contacts: contactsInitialState,
+            ui: uiInitialState,
+            chats: chatsInitialState,
+            // we blacklist stories from the persistConfig
+            stories: state.stories,
+        };
+    }
+
+    return appReducer(state, action);
+};
+
+// @ts-ignore
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({

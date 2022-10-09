@@ -231,3 +231,4 @@ export const {
 } = chatsSlice.actions;
 
 export default chatsSlice.reducer;
+export const chatsInitialState = initialState;

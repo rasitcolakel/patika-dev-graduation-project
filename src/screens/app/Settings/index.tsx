@@ -1,13 +1,15 @@
 import { CompositeScreenProps } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { logoutAction } from '@src/features/authSlice';
 import {
     AppStackParamList,
     SettingsStackParamList,
 } from '@src/types/NavigationTypes';
-import { useAppSelector } from '@store/index';
+import { persistor, useAppDispatch, useAppSelector } from '@store/index';
 import { Entypo, FontAwesome } from 'expo-vector-icons';
 import {
     Avatar,
+    Button,
     HStack,
     Heading,
     Icon,
@@ -25,10 +27,16 @@ type Props = CompositeScreenProps<
 >;
 
 const Settings = ({ navigation }: Props) => {
+    const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.auth.user);
     const { colorMode, toggleColorMode } = useColorMode();
+
+    const logout = () => {
+        dispatch(logoutAction());
+        persistor.purge();
+    };
     return (
-        <View my={3}>
+        <View my={3} flex={1}>
             <HStack mx={4} alignItems="center">
                 <Avatar source={{ uri: user?.photoURL }} size="xl">
                     {user?.firstName[0] + ' ' + user?.lastName[0]}
@@ -70,6 +78,17 @@ const Settings = ({ navigation }: Props) => {
                     onValueChange={toggleColorMode}
                     color="primary.500"
                 />
+            </HStack>
+            <HStack alignItems="center" w="full" alignSelf="flex-end" mt="auto">
+                <Button
+                    variant="ghost"
+                    size="lg"
+                    w="full"
+                    colorScheme="secondary"
+                    onPress={logout}
+                >
+                    Logout
+                </Button>
             </HStack>
         </View>
     );

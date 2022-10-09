@@ -3,7 +3,7 @@ import { getMyProfileAction, logoutAction, setUser } from '@features/authSlice';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { auth } from '@services/FirebaseService';
 import { UserType } from '@src/types/UserTypes';
-import { useAppDispatch, useAppSelector } from '@store/index';
+import { persistor, useAppDispatch, useAppSelector } from '@store/index';
 import * as SecureStore from 'expo-secure-store';
 import { StatusBar } from 'expo-status-bar';
 import { useColorMode, useColorModeValue, useTheme } from 'native-base';
@@ -49,6 +49,7 @@ const Navigation = () => {
             } else {
                 // if no user is logged in, clear storage and log out the user
                 dispatch(logoutAction());
+                await persistor.purge();
             }
         });
     };

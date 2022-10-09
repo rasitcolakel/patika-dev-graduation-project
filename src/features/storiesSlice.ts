@@ -194,3 +194,4 @@ export const {
 } = storiesSlice.actions;
 
 export default storiesSlice.reducer;
+export const storiesInitialState = initialState;

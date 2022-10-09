@@ -4,9 +4,12 @@ import { setUserPushToken, setUserStatus } from '@src/services/UserService';
 import { AppStackParamList } from '@src/types/NavigationTypes';
 import { registerForPushNotificationsAsync } from '@src/utils/notificationUtils';
 import { useEffect } from 'react';
+import { LogBox } from 'react-native';
 
 import BottomTabs from './BottomTabs';
 import ChatScreenStack from './ChatScreenStack';
+
+LogBox.ignoreAllLogs();
 
 const Tab = createStackNavigator<AppStackParamList>();
 

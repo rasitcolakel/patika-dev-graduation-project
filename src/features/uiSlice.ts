@@ -63,3 +63,4 @@ export const uiSlice = createSlice({
 export const { setToast, clearToast } = uiSlice.actions;
 
 export default uiSlice.reducer;
+export const uiInitialState = initialState;

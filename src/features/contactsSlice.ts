@@ -212,3 +212,4 @@ export const {
 } = contactsSlice.actions;
 
 export default contactsSlice.reducer;
+export const contactsInitialState = initialState;

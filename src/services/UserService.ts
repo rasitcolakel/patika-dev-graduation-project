@@ -176,14 +176,11 @@ export const getAllUsers = async (
         const user = auth.currentUser;
         if (user) {
             const usersRef = collection(db, 'users');
-
+            const notIn = userContacts
+                ? [user.uid, ...userContacts]
+                : [user.uid];
             const querySnapshot = await getDocs(
-                userContacts && userContacts?.length > 0
-                    ? query(
-                          usersRef,
-                          where('id', 'not-in', [user.uid, ...userContacts]),
-                      )
-                    : usersRef,
+                query(usersRef, where('id', 'not-in', notIn)),
             );
             const users: UserType[] = [];
 

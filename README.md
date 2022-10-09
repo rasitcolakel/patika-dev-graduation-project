@@ -63,6 +63,16 @@ https://user-images.githubusercontent.com/53280610/194757384-a7ff21a1-9143-4732-
 
 https://user-images.githubusercontent.com/53280610/194757409-c2dc7e4e-4ce0-482a-ae39-6fd65ccc8489.mov
 
+<h3>Creating a Chat And Messaging</h3>
+
+As you can see, when a user sends a message, the receiver will receive a notification.
+
+
+https://user-images.githubusercontent.com/53280610/194760398-9790c8a0-8be5-4e5e-a20c-bcd30b0e0b9b.mov
+
+
+
+
 ---
 
 <h2>Used Technologies</h2>

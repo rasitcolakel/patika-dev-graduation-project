@@ -70,7 +70,10 @@ As you can see, when a user sends a message, the receiver will receive a notific
 
 https://user-images.githubusercontent.com/53280610/194760398-9790c8a0-8be5-4e5e-a20c-bcd30b0e0b9b.mov
 
+<h3>Sending Live Location and Showing in a large MapView</h3>
 
+
+https://user-images.githubusercontent.com/53280610/194760924-a0bea33d-81ae-486b-843b-94b5e22ef2dc.mov
 
 
 ---

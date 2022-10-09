@@ -67,34 +67,25 @@ https://user-images.githubusercontent.com/53280610/194757409-c2dc7e4e-4ce0-482a-
 
 As you can see, when a user sends a message, the receiver will receive a notification.
 
-
 https://user-images.githubusercontent.com/53280610/194760398-9790c8a0-8be5-4e5e-a20c-bcd30b0e0b9b.mov
 
 <h3>Sending Live Location and Showing in a large MapView</h3>
 
-
 https://user-images.githubusercontent.com/53280610/194760924-a0bea33d-81ae-486b-843b-94b5e22ef2dc.mov
 
-
 <h3>Choosing an Image From Library</h3>
-
 
 https://user-images.githubusercontent.com/53280610/194761241-2af7bbe8-1f53-4d48-a405-0d585f0e48ed.mov
 
 <h3>Taking a Picture</h3>
 
-
-
 https://user-images.githubusercontent.com/53280610/194761544-cad6c2cf-512d-4122-8a56-8c5cbde9fc46.mov
 
 <h3>Seen status of the message sent</h3>
 
-
-
 https://user-images.githubusercontent.com/53280610/194761728-225c53cc-0020-41c3-8301-7e43784e7694.mov
 
 <h3> User Status is online or not </h3>
-
 
 https://user-images.githubusercontent.com/53280610/194761923-1eabd40b-706d-4a73-8076-6c8fb1c43559.mov
 
@@ -102,8 +93,17 @@ https://user-images.githubusercontent.com/53280610/194761923-1eabd40b-706d-4a73-
 
 https://user-images.githubusercontent.com/53280610/194774035-550b6113-55d4-48ff-b917-31ddefccafab.mov
 
+<h2> Settings Stack </h2>
+<img src="./screenshots/ui/settings.png" width="100%"/>
 
+<h2> Chats Stack </h2>
+<img src="./screenshots/ui/chats.png" width="100%"/>
 
+<h2> Contacts Stack </h2>
+<img src="./screenshots/ui/contacts.png" width="100%"/>
+
+<h2> Statuses Stack </h2>
+<img src="./screenshots/ui/statuses.png" width="100%"/>
 
 ---
 

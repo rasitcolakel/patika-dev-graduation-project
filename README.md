@@ -90,6 +90,345 @@ In this project, I used the following technologies:
 
 <h2><b> Expo </b></h2>
 
+<br />
+
+<h3> Secure Store</h3>
+SecureStore is a key-value storage system that is similar to AsyncStorage, but provides a secure storage for sensitive data. SecureStore uses the Keychain Services on iOS and the Keystore on Android.
+
+<h4>Installation</h4>
+
+```sh
+expo install expo-secure-store
+```
+
+<h4 >Usage</h4>
+
+```tsx
+import * as SecureStore from 'expo-secure-store';
+
+// setItem
+await SecureStore.setItemAsync('key', 'value');
+
+// getItem
+const value = await SecureStore.getItemAsync('key');
+
+// deleteItem
+await SecureStore.deleteItemAsync('key');
+```
+
+<br />
+
+<h3> Expo Notifications</h3>
+Expo Notifications is a module that allows you to send local and push notifications to your app.
+
+<h4>Installation</h4>
+
+```sh
+expo install expo-notifications
+```
+
+<h4>Usage</h4>
+
+<h4> How to get the token</h4>
+
+```tsx
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import { Platform } from 'react-native';
+
+export async function registerForPushNotificationsAsync() {
+    let token;
+
+    if (Platform.OS === 'android') {
+        await Notifications.setNotificationChannelAsync('default', {
+            name: 'default',
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+        });
+    }
+
+    if (Device.isDevice) {
+        const { status: existingStatus } =
+            await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+            // alert('Failed to get push token for push notification!');
+            return;
+        }
+        token = (await Notifications.getExpoPushTokenAsync()).data;
+        console.log(token);
+    } else {
+        // alert('Must use physical device for Push Notifications');
+    }
+
+    return token;
+}
+
+// setNotificationHandler is required to use notifications
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+    }),
+});
+
+// registerForPushNotificationsAsync
+const token = await registerForPushNotificationsAsync();
+```
+
+<h4> How to handle received and tapped notifications</h4>
+
+```tsx
+// you need to use that code in a functional component
+
+const notificationListener = useRef<any>();
+const responseListener = useRef<any>();
+
+useEffect(() => {
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    notificationListener.current =
+        Notifications.addNotificationReceivedListener((notification) => {
+            console.log('notificationReceived', notification);
+        });
+
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current =
+        Notifications.addNotificationResponseReceivedListener(
+            async (response) => {
+                const data = response.notification.request.content.data;
+                console.log('responseReceived', data);
+                if (data.type === 'message') {
+                    const user = await getUserById(data.senderId as string);
+                    if (user) {
+                        navigation.navigate('ChatStack', {
+                            screen: 'ChatScreen',
+                            params: {
+                                user,
+                            },
+                        });
+                    }
+                }
+            },
+        );
+
+    return () => {
+        Notifications.removeNotificationSubscription(
+            notificationListener.current,
+        );
+        Notifications.removeNotificationSubscription(responseListener.current);
+    };
+}, []);
+```
+
+<h3> Expo Location</h3>
+Expo Location provides an API to interact with the user's location. It uses the native location API under the hood.
+
+<h4>Installation</h4>
+
+```sh
+expo install expo-location
+```
+
+<h4>Usage</h4>
+
+```tsx
+import * as Location from 'expo-location';
+
+// requestPermissionsAsync
+const { status } = await Location.requestPermissionsAsync();
+
+// getCurrentPositionAsync
+const location = await Location.getCurrentPositionAsync({});
+```
+
+<h3 > Expo Camera</h3>
+Expo Camera is a component that allows you to render a camera view. It is a wrapper around the Camera component from react-native-camera.
+
+<h4 >Installation</h4>
+
+```sh
+expo install expo-camera
+```
+
+<h4>Usage</h4>
+
+```tsx
+import { Camera, CameraType } from 'expo-camera';
+
+function App() {
+    const [hasPermission, setHasPermission] = useState(null);
+    const [type, setType] = useState(CameraType.back);
+
+    useEffect(() => {
+        (async () => {
+            const { status } = await Camera.requestPermissionsAsync();
+            setHasPermission(status === 'granted');
+        })();
+    }, []);
+
+    if (hasPermission === null) {
+        return <View />;
+    }
+    if (hasPermission === false) {
+        return <Text>No access to camera</Text>;
+    }
+    return (
+        <View style={{ flex: 1 }}>
+            <Camera style={{ flex: 1 }} type={type} />
+        </View>
+    );
+}
+```
+
+<h4>How to take a picture</h4>
+
+To take a picture, we need to use the takePictureAsync method from the ref of the Camera component.
+
+```tsx
+// add these lines into the App component
+const cameraRef = useRef<Camera>(null);
+const takePicture = async () => {
+    const photo = await cameraRef.current?.takePictureAsync();
+    console.log('photo', photo);
+};
+
+// add a ref to the Camera component
+<Camera
+    style={{ flex: 1 }}
+    type={type}
+    // add ref to the Camera component
+    ref={cameraRef}
+>
+    <Button title="Take a Picture" onPress={takePicture} />;
+</Camera>;
+```
+
+<h4>How to switch camera</h4>
+
+To switch camera, we need to use the CameraType enum from expo-camera and set the type state.
+
+```tsx
+// add these lines into the App component
+const [type, setType] = useState(CameraType.back);
+const switchCamera = () => {
+    setType(type === CameraType.back ? CameraType.front : CameraType.back);
+};
+
+// add a button to switch camera
+<Button title="Switch Camera" onPress={switchCamera} />;
+```
+
+<h3> Expo Image Picker</h3>
+Expo Image Picker is a component that allows you to pick an image from the user's library or take a picture with the camera.
+
+<h4>Installation</h4>
+
+```sh
+expo install expo-image-picker
+```
+
+<h4>Usage</h4>
+
+```tsx
+import * as ImagePicker from 'expo-image-picker';
+
+// requestPermissionsAsync
+const { status } = await ImagePicker.requestCameraPermissionsAsync();
+
+// launchImageLibraryAsync
+const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.All,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+});
+```
+
+<h3> Expo Image Manipulator</h3>
+Expo Image Manipulator is a component that allows you to manipulate an image. It is a wrapper around the ImageManipulator component from react-native-image-crop-picker. And I have used this library to resize the image before uploading it to the server.
+
+<h4>Installation</h4>
+
+```sh
+expo install expo-image-manipulator
+```
+
+<h4>Usage</h4>
+
+```tsx
+import * as ImageManipulator from 'expo-image-manipulator';
+
+// manipulateAsync
+const resizedImage = await ImageManipulator.manipulateAsync(
+    image.uri,
+    [{ resize: { width: 300 } }],
+    { compress: 1, format: ImageManipulator.SaveFormat.JPEG },
+);
+```
+
+<h3 > React Native Maps</h3>
+React Native Maps is a component that allows you to render a map view. It is a wrapper around the MapView component from react-native-maps.
+
+<h4>Installation</h4>
+
+```sh
+expo install react-native-maps
+```
+
+<h4>Usage</h4>
+
+```tsx
+import MapView from 'react-native-maps';
+
+function App() {
+    return (
+        <MapView
+            style={{ flex: 1 }}
+            initialRegion={{
+                latitude: 37.78825,
+                longitude: -122.4324,
+                latitudeDelta: 0.9,
+                longitudeDelta: 0.04,
+            }}
+        />
+    );
+}
+```
+
+<h4>Adding a Marker</h4>
+
+```tsx
+import MapView, { Marker } from 'react-native-maps';
+
+function App() {
+    return (
+        <MapView
+            style={{ flex: 1 }}
+            initialRegion={{
+                latitude: 37.78825,
+                longitude: -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            }}
+        >
+            <Marker
+                coordinate={{
+                    latitude: 37.78825,
+                    longitude: -122.4324,
+                }}
+                title="My Marker"
+                description="Some description"
+            />
+        </MapView>
+    );
+}
+```
+
 ---
 
 <p>Expo is an open-source platform for making universal native apps for Android, iOS, and the web with JavaScript and React.</p>

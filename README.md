@@ -98,6 +98,11 @@ https://user-images.githubusercontent.com/53280610/194761728-225c53cc-0020-41c3-
 
 https://user-images.githubusercontent.com/53280610/194761923-1eabd40b-706d-4a73-8076-6c8fb1c43559.mov
 
+<h2> Sharing and Showing Statuses </h2>
+
+https://user-images.githubusercontent.com/53280610/194774035-550b6113-55d4-48ff-b917-31ddefccafab.mov
+
+
 
 
 ---

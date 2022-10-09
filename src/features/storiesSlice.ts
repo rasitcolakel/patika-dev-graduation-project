@@ -26,9 +26,12 @@ type ShareStoryActionProps = {
 export const shareStoryAction = createAsyncThunk(
     'stories/shareStory',
     async ({ media, callback }: ShareStoryActionProps) => {
+        console.log('shareStoryAction', media);
         const imageURL = await ImageService.uploadImage(media);
-        await StoriesService.shareStory(imageURL);
-        if (callback !== undefined) callback();
+        console.log('imageURL', imageURL);
+        if (imageURL) {
+            await StoriesService.shareStory(imageURL);
+        }
     },
 );
 

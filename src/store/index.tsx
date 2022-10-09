@@ -4,7 +4,7 @@ import { uiInitialState, uiSlice } from '@features/uiSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AnyAction, combineReducers, configureStore } from '@reduxjs/toolkit';
 import { chatsInitialState, chatsSlice } from '@src/features/chatsSlice';
-import { storiesInitialState, storiesSlice } from '@src/features/storiesSlice';
+import { storiesSlice } from '@src/features/storiesSlice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import {
     FLUSH,

@@ -76,6 +76,13 @@ https://user-images.githubusercontent.com/53280610/194760398-9790c8a0-8be5-4e5e-
 https://user-images.githubusercontent.com/53280610/194760924-a0bea33d-81ae-486b-843b-94b5e22ef2dc.mov
 
 
+<h3>Choosing an Image From Library</h3>
+
+
+https://user-images.githubusercontent.com/53280610/194761241-2af7bbe8-1f53-4d48-a405-0d585f0e48ed.mov
+
+
+
 ---
 
 <h2>Used Technologies</h2>
